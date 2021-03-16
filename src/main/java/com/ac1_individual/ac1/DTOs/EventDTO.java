@@ -3,6 +3,8 @@ package com.ac1_individual.ac1.DTOs;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.ac1_individual.ac1.models.Event;
+
 public class EventDTO {
 
     long id;
@@ -67,5 +69,21 @@ public class EventDTO {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public static EventDTO toDTO(Event eventIn) {
+        EventDTO eventDTO = new EventDTO();
+
+        eventDTO.id = eventIn.getId();
+        eventDTO.name = eventIn.getName();
+        eventDTO.description = eventIn.getDescription();
+        eventDTO.place = eventIn.getPlace();
+        eventDTO.startDate = eventIn.getStartDate();
+        eventDTO.startTime = eventIn.getStartTime();
+        eventDTO.endDate = eventIn.getEndDate();
+        eventDTO.endTime = eventIn.getEndTime();
+        eventDTO.email = eventIn.getEmail();
+
+        return eventDTO;
     }
 }
