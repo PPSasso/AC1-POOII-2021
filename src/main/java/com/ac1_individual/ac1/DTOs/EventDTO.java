@@ -8,7 +8,6 @@ import com.ac1_individual.ac1.models.Event;
 public class EventDTO {
 
     long id;
-    String name;
     String description;
     String place;
     LocalDate startDate;
@@ -16,18 +15,28 @@ public class EventDTO {
     LocalTime startTime;
     LocalTime endTime;
     String email;
+
+    public EventDTO(){
+    }
+
+    public EventDTO(Event event){
+
+        setId(event.getId());
+        setDescription(event.getDescription());
+        setPlace(event.getPlace());
+        setStartDate(event.getStartDate());
+        setEndDate(event.getEndDate());
+        setStartTime(event.getStartTime());
+        setEndTime(event.getEndTime());
+    }
+
     public long getId() {
         return id;
     }
     public void setId(long id) {
         this.id = id;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public String getDescription() {
         return description;
     }
@@ -71,19 +80,4 @@ public class EventDTO {
         this.email = email;
     }
     
-    public static EventDTO toDTO(Event eventIn) {
-        EventDTO eventDTO = new EventDTO();
-
-        eventDTO.id = eventIn.getId();
-        eventDTO.name = eventIn.getName();
-        eventDTO.description = eventIn.getDescription();
-        eventDTO.place = eventIn.getPlace();
-        eventDTO.startDate = eventIn.getStartDate();
-        eventDTO.startTime = eventIn.getStartTime();
-        eventDTO.endDate = eventIn.getEndDate();
-        eventDTO.endTime = eventIn.getEndTime();
-        eventDTO.email = eventIn.getEmail();
-
-        return eventDTO;
-    }
 }
