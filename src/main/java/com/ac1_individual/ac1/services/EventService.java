@@ -1,7 +1,5 @@
 package com.ac1_individual.ac1.services;
 
-import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
 
 import com.ac1_individual.ac1.DTOs.EventDTO;
@@ -11,7 +9,6 @@ import com.ac1_individual.ac1.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -45,6 +42,14 @@ public class EventService {
             }
 
             return new EventDTO(event);
+        }catch(EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+        }
+    }
+
+    public void deleteEvent(long id) {
+        try{
+            repo.deleteById(id);
         }catch(EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
