@@ -54,5 +54,15 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
     }
+
+    public Event getEventById(long id) {
+        try{
+            Event event = repo.getOne(id);
+            
+            return event;
+        }catch(EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+        } 
+    }
     
 }
