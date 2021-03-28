@@ -2,7 +2,7 @@ package com.ac1_individual.ac1.services;
 
 import javax.persistence.EntityNotFoundException;
 
-import com.ac1_individual.ac1.DTOs.EventDTO;
+import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.models.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
 
@@ -17,13 +17,13 @@ public class EventService {
     @Autowired
     EventRepository repo;
 
-    public EventDTO createEvent(Event eventIn) {
-        EventDTO entity = new EventDTO(eventIn);
+    public EventUpdateDTO createEvent(Event eventIn) {
+        EventUpdateDTO entity = new EventUpdateDTO(eventIn);
         repo.save(eventIn);
         return entity;
     }
 
-    public EventDTO updateEvent(EventDTO eventIn, long id) {
+    public EventUpdateDTO updateEvent(EventUpdateDTO eventIn, long id) {
         try{
             Event event = repo.getOne(id);
             event.setDescription(eventIn.getDescription());
@@ -41,7 +41,7 @@ public class EventService {
                 repo.save(event);
             }
 
-            return new EventDTO(event);
+            return new EventUpdateDTO(event);
         }catch(EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }

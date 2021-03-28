@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 import com.ac1_individual.ac1.models.Event;
 
-public class EventDTO {
+public class EventUpdateDTO {
 
     long id;
     String description;
@@ -16,10 +16,10 @@ public class EventDTO {
     LocalTime endTime;
     String email;
 
-    public EventDTO(){
+    public EventUpdateDTO(){
     }
 
-    public EventDTO(Event event){
+    public EventUpdateDTO(Event event){
 
         setId(event.getId());
         setDescription(event.getDescription());
