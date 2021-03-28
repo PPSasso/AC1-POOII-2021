@@ -17,13 +17,13 @@ public class EventService {
     @Autowired
     EventRepository repo;
 
-    public EventUpdateDTO createEvent(Event eventIn) {
-        EventUpdateDTO entity = new EventUpdateDTO(eventIn);
-        repo.save(eventIn);
-        return entity;
+    public Event createEvent(Event eventIn) {
+        Event newEvent = repo.save(eventIn);
+        
+        return newEvent;
     }
 
-    public EventUpdateDTO updateEvent(EventUpdateDTO eventIn, long id) {
+    public Event updateEvent(EventUpdateDTO eventIn, long id) {
         try{
             Event event = repo.getOne(id);
             event.setDescription(eventIn.getDescription());
@@ -41,7 +41,7 @@ public class EventService {
                 repo.save(event);
             }
 
-            return new EventUpdateDTO(event);
+            return event;
         }catch(EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }

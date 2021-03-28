@@ -26,18 +26,18 @@ public class EventController {
     EventService service;
 
     @PostMapping
-    public ResponseEntity<EventUpdateDTO> createEvent(@RequestBody Event eventIn)
+    public ResponseEntity<Event> createEvent(@RequestBody Event eventIn)
     {
-        EventUpdateDTO newEvent = service.createEvent(eventIn);
+        Event newEvent = service.createEvent(eventIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newEvent.getId()).toUri();
         return ResponseEntity.created(uri).body(newEvent);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<EventUpdateDTO> updateEvent(@RequestBody EventUpdateDTO eventIn, @PathVariable long id)
+    public ResponseEntity<Event> updateEvent(@RequestBody EventUpdateDTO eventIn, @PathVariable long id)
     {
-        EventUpdateDTO dto = service.updateEvent(eventIn, id);
-        return ResponseEntity.ok().body(dto);
+        Event event = service.updateEvent(eventIn, id);
+        return ResponseEntity.ok().body(event);
     }
 
     @DeleteMapping("{id}")
