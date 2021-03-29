@@ -20,9 +20,15 @@ public class EventService {
     EventRepository repo;
 
     public Event createEvent(Event eventIn) {
-        Event newEvent = repo.save(eventIn);
+        Event newEvent;
         
-        return newEvent;
+        if(eventIn.getStartDate().isAfter(eventIn.getEndDate())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
+        }
+        else{
+            return newEvent = repo.save(eventIn);
+        }
+
     }
 
     public Page<Event> getEvents(Pageable pageRequest){
@@ -42,7 +48,7 @@ public class EventService {
             event.setStartTime(eventIn.getStartTime());
             event.setEndTime(eventIn.getEndTime());
 
-            if(event.getStartDate().isBefore(event.getEndDate())){
+            if(event.getStartDate().isAfter(event.getEndDate())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
             }
             else{
