@@ -7,6 +7,8 @@ import com.ac1_individual.ac1.models.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +23,12 @@ public class EventService {
         Event newEvent = repo.save(eventIn);
         
         return newEvent;
+    }
+
+    public Page<Event> getEvents(Pageable pageRequest){
+        Page<Event> pages = repo.find(pageRequest);
+
+        return pages;
     }
 
     public Event updateEvent(EventUpdateDTO eventIn, long id) {
