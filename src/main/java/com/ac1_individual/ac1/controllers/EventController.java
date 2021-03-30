@@ -3,7 +3,7 @@ package com.ac1_individual.ac1.controllers;
 import java.net.URI;
 
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
-import com.ac1_individual.ac1.models.Event;
+import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.services.EventService;
 
 import org.springframework.http.ResponseEntity;
@@ -65,12 +65,17 @@ public class EventController {
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "6") Integer linesPerPage,
         @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-        @RequestParam(value = "orderBy", defaultValue = "id") String orderBy
+        @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+        @RequestParam(value = "name", defaultValue = "") String name,
+        @RequestParam(value = "place", defaultValue = "") String place,
+        @RequestParam(value = "startDate", defaultValue = "1000-01-01") String startDate,
+        @RequestParam(value = "description", defaultValue = "") String description
+
 
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Event> events = service.getEvents(pageRequest);
+        Page<Event> events = service.getEvents(pageRequest, name, place, startDate, description);
 
         return ResponseEntity.ok(events);
 

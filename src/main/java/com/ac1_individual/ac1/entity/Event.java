@@ -1,4 +1,4 @@
-package com.ac1_individual.ac1.models;
+package com.ac1_individual.ac1.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -3,7 +3,7 @@ package com.ac1_individual.ac1.DTOs;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.ac1_individual.ac1.models.Event;
+import com.ac1_individual.ac1.entity.Event;
 
 public class EventUpdateDTO {
 

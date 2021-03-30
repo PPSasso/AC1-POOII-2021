@@ -1,9 +1,11 @@
 package com.ac1_individual.ac1.services;
 
+import java.time.LocalDate;
+
 import javax.persistence.EntityNotFoundException;
 
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
-import com.ac1_individual.ac1.models.Event;
+import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,9 @@ public class EventService {
 
     }
 
-    public Page<Event> getEvents(Pageable pageRequest){
-        Page<Event> pages = repo.find(pageRequest);
+    public Page<Event> getEvents(Pageable pageRequest, String name, String place, String startDate, String description){
+        LocalDate date = LocalDate.parse(startDate);
+        Page<Event> pages = repo.find(pageRequest, name, place, date, description);
 
         return pages;
     }
