@@ -10,6 +10,7 @@ import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class EventService {
     public void deleteEvent(long id) {
         try{
             repo.deleteById(id);
-        }catch(EntityNotFoundException e){
+        }catch(EmptyResultDataAccessException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
     }
