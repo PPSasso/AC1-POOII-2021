@@ -1,6 +1,7 @@
 package com.ac1_individual.ac1.services;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -59,7 +60,7 @@ public class EventService {
             }
 
             return event;
-        }catch(EntityNotFoundException e){
+        }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
     }
