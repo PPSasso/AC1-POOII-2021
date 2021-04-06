@@ -76,10 +76,10 @@ public class EventService {
 
     public Event getEventById(long id) {
         try{
-            Event event = repo.getOne(id);
+            Event event = repo.findById(id).get();
             
             return event;
-        }catch(EntityNotFoundException e){
+        }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         } 
     }
