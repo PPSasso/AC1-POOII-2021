@@ -42,7 +42,7 @@ public class EventService {
 
     public Event updateEvent(EventUpdateDTO eventIn, long id) {
         try{
-            Event event = repo.getOne(id);
+            Event event = repo.findById(id).get();
             event.setDescription(eventIn.getDescription());
             event.setPlace(eventIn.getPlace());
             event.setEmail(eventIn.getEmail());
