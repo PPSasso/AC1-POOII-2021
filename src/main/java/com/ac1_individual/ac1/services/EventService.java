@@ -3,8 +3,6 @@ package com.ac1_individual.ac1.services;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
-import javax.persistence.EntityNotFoundException;
-
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
@@ -47,7 +45,7 @@ public class EventService {
             Event event = repo.findById(id).get();
             event.setDescription(eventIn.getDescription());
             event.setPlace(eventIn.getPlace());
-            event.setEmail(eventIn.getEmail());
+            event.setEmailContact(eventIn.getEmail());
             event.setStartDate(eventIn.getStartDate());
             event.setEndDate(eventIn.getEndDate());
             event.setStartTime(eventIn.getStartTime());

@@ -28,7 +28,7 @@ public class EventUpdateDTO {
         setEndDate(event.getEndDate());
         setStartTime(event.getStartTime());
         setEndTime(event.getEndTime());
-        setEmail(event.getEmail());
+        setEmail(event.getEmailContact());
     }
 
     public long getId() {

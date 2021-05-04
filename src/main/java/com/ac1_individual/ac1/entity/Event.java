@@ -22,8 +22,29 @@ public class Event {
     LocalDate endDate;
     LocalTime startTime;
     LocalTime endTime;
-    String email;
+    String emailContact;
+    Long amountFreeTickets;
+    Long amountPaidTickets;
+    Double ticketPrice; 
 
+    public Long getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+    public void setAmountFreeTickets(Long amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+    public Long getAmountPaidTickets() {
+        return amountPaidTickets;
+    }
+    public void setAmountPaidTickets(Long amountPaidTickets) {
+        this.amountPaidTickets = amountPaidTickets;
+    }
+    public Double getTicketPrice() {
+        return ticketPrice;
+    }
+    public void setTicketPrice(Double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
     public long getId() {
         return id;
     }
@@ -69,11 +90,11 @@ public class Event {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-    public String getEmail() {
-        return email;
+    public String getEmailContact() {
+        return emailContact;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailContact(String emailContact) {
+        this.emailContact = emailContact;
     }
     @Override
     public int hashCode() {
