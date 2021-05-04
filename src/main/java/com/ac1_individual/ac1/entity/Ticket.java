@@ -13,10 +13,13 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     
-    Enum type;
-    String description;
-    Instant date;
-    Double price;
+    private enum type{
+        FREE,
+        PAID,
+    };
+    private String description;
+    private Instant date;
+    private Double price;
 
     public long getId() {
         return id;
@@ -42,14 +45,6 @@ public class Ticket {
         if (id != other.id)
             return false;
         return true;
-    }
-
-    public Enum getType() {
-        return type;
-    }
-
-    public void setType(Enum type) {
-        this.type = type;
     }
 
     public String getDescription() {
