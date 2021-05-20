@@ -20,6 +20,27 @@ public class Ticket implements Serializable {
     };
     private Instant date;
     private Double price;
+    
+    //Anotação
+    private Attend attend;
+    //Anotação
+    private Event event;
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Attend getAttend() {
+        return attend;
+    }
+
+    public void setAttend(Attend attend) {
+        this.attend = attend;
+    }
 
     public long getId() {
         return id;

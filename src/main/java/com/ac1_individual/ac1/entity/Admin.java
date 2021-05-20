@@ -13,8 +13,13 @@ public class Admin extends BaseUser{
 
     public Admin() {
     }
-
+    
     public Admin(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Admin(long id, String name, String email, String phoneNumber) {
+        super(id, name, email);
         this.phoneNumber = phoneNumber;
     }
 

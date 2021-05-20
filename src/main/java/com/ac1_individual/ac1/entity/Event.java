@@ -3,19 +3,29 @@ package com.ac1_individual.ac1.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "TB_EVENT")
 public class Event implements Serializable{
+
+    //@Anotação
+    private List<Ticket> tickets = new ArrayList<>();
+    
+    //@Anotação
+    private List<Place> places = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    
     private String name;
     private String description;
     private String place;
@@ -26,7 +36,43 @@ public class Event implements Serializable{
     private String emailContact;
     private Long amountFreeTickets;
     private Long amountPaidTickets;
-    private Double ticketPrice; 
+    private Double ticketPrice;
+    
+    //@Anotação
+    private Admin admin;
+    
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+    
+    public void addPlaces(Place place) {
+        this.places.add(place);
+    }
+    
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+    
+    public void addTickets(Ticket ticket) {
+        
+        this.tickets.add(ticket);
+    }
+    
+    public Admin getAdmin() {
+        return admin;
+    }
+    
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 
     public Long getAmountFreeTickets() {
         return amountFreeTickets;
