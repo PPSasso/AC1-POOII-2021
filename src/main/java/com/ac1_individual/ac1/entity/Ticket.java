@@ -7,9 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "TB_TICKET")
 public class Ticket implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -20,10 +25,13 @@ public class Ticket implements Serializable {
     };
     private Instant date;
     private Double price;
-    
-    //Anotação
+
+    @ManyToOne
+    @JoinColumn(name = "ATTEND_BASEUSER_ID")
     private Attend attend;
-    //Anotação
+    
+    @ManyToOne
+    @JoinColumn(name = "EVENT_ID")
     private Event event;
 
     public Event getEvent() {

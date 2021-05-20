@@ -10,16 +10,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "TB_EVENT")
 public class Event implements Serializable{
 
-    //@Anotação
+    @OneToMany(mappedBy = "event")
     private List<Ticket> tickets = new ArrayList<>();
     
-    //@Anotação
+    @ManyToMany // (mappedBy = "events")
     private List<Place> places = new ArrayList<>();
 
     @Id
