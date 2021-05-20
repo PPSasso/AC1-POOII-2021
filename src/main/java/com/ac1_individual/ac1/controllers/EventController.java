@@ -5,6 +5,7 @@ import java.net.URI;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.services.EventService;
+import com.ac1_individual.ac1.services.TicketService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class EventController {
 
     @Autowired
-    EventService service;
+    EventService eventService;
+
+    @Autowired
+    TicketService ticketService;
 
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event eventIn)
     {
-        Event newEvent = service.createEvent(eventIn);
+        Event newEvent = eventService.createEvent(eventIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newEvent.getId()).toUri();
         return ResponseEntity.created(uri).body(newEvent);
     }
@@ -40,21 +44,21 @@ public class EventController {
     @PutMapping("{id}")
     public ResponseEntity<Event> updateEvent(@RequestBody EventUpdateDTO eventIn, @PathVariable long id)
     {
-        Event event = service.updateEvent(eventIn, id);
+        Event event = eventService.updateEvent(eventIn, id);
         return ResponseEntity.ok().body(event);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable long id)
     {
-        service.deleteEvent(id);
+        eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Event> getEventById(@PathVariable long id)
     {
-        Event event = service.getEventById(id);
+        Event event = eventService.getEventById(id);
 
         return ResponseEntity.ok().body(event);
     }
@@ -75,7 +79,7 @@ public class EventController {
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Event> events = service.getEvents(pageRequest, name, place, startDate, description);
+        Page<Event> events = eventService.getEvents(pageRequest, name, place, startDate, description);
 
         return ResponseEntity.ok(events);
 

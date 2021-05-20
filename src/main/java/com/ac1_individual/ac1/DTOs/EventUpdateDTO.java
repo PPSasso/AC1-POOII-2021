@@ -15,6 +15,33 @@ public class EventUpdateDTO {
     LocalTime startTime;
     LocalTime endTime;
     String email;
+    Long amountFreeTickets;
+    Long amountPaidTickets;
+    
+    public Long getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+
+    public void setAmountFreeTickets(Long amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+
+    public Long getAmountPaidTickets() {
+        return amountPaidTickets;
+    }
+
+    public void setAmountPaidTickets(Long amountPaidTickets) {
+        this.amountPaidTickets = amountPaidTickets;
+    }
+
+    public Double getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(Double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+    Double ticketPrice; 
 
     public EventUpdateDTO(){
     }

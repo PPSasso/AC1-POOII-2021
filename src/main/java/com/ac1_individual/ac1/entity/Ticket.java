@@ -1,5 +1,6 @@
 package com.ac1_individual.ac1.entity;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Ticket {
+public class Ticket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -17,7 +18,6 @@ public class Ticket {
         FREE,
         PAID,
     };
-    private String description;
     private Instant date;
     private Double price;
 
@@ -45,14 +45,6 @@ public class Ticket {
         if (id != other.id)
             return false;
         return true;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Instant getDate() {

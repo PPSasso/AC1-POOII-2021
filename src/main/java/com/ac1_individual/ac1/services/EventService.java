@@ -50,6 +50,7 @@ public class EventService {
             event.setEndDate(eventIn.getEndDate());
             event.setStartTime(eventIn.getStartTime());
             event.setEndTime(eventIn.getEndTime());
+            event.setTicketPrice(eventIn.getTicketPrice());
 
             if(event.getStartDate().isAfter(event.getEndDate())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
