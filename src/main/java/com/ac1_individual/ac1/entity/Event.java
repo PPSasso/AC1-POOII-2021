@@ -1,5 +1,6 @@
 package com.ac1_individual.ac1.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -9,23 +10,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Event {
+public class Event implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
-    String name;
-    String description;
-    String place;
-    LocalDate startDate;
-    LocalDate endDate;
-    LocalTime startTime;
-    LocalTime endTime;
-    String emailContact;
-    Long amountFreeTickets;
-    Long amountPaidTickets;
-    Double ticketPrice; 
+    private String name;
+    private String description;
+    private String place;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private String emailContact;
+    private Long amountFreeTickets;
+    private Long amountPaidTickets;
+    private Double ticketPrice; 
 
     public Long getAmountFreeTickets() {
         return amountFreeTickets;
