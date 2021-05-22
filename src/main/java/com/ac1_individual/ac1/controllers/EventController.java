@@ -2,13 +2,15 @@ package com.ac1_individual.ac1.controllers;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
+import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.services.EventService;
 import com.ac1_individual.ac1.services.TicketService;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,9 +37,9 @@ public class EventController {
     TicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@Validated @RequestBody Event eventIn)
+    public ResponseEntity<EventCreateDTO> createEvent(@Valid @RequestBody EventCreateDTO eventIn)
     {
-        Event newEvent = eventService.createEvent(eventIn);
+        EventCreateDTO newEvent = eventService.createEvent(eventIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newEvent.getId()).toUri();
         return ResponseEntity.created(uri).body(newEvent);
     }

@@ -3,8 +3,12 @@ package com.ac1_individual.ac1.services;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
+import com.ac1_individual.ac1.DTOs.AdminDTO;
+import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
+import com.ac1_individual.ac1.entity.Admin;
 import com.ac1_individual.ac1.entity.Event;
+import com.ac1_individual.ac1.repositories.AdminRepository;
 import com.ac1_individual.ac1.repositories.EventRepository;
 import com.ac1_individual.ac1.repositories.PlaceRepository;
 
@@ -24,14 +28,33 @@ public class EventService {
     
     @Autowired
     PlaceRepository placeRepo;
+    
+    @Autowired
+    AdminRepository adminRepo;
 
-    public Event createEvent(Event eventIn) {
+    public EventCreateDTO createEvent(EventCreateDTO eventIn) {
         
         if(eventIn.getStartDate().isAfter(eventIn.getEndDate())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
         }
         else{
-            return eventRepo.save(eventIn);
+
+            try{
+                Admin admin = adminRepo.findById(eventIn.getAdminId()).get();
+                
+                Event event = new Event(eventIn, admin);
+                
+                eventRepo.save(event);
+                
+                eventIn.setAdmin(new AdminDTO(admin));
+                eventIn.setId(event.getId());
+
+                return eventIn;
+
+            } catch(NoSuchElementException e){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: Nao foi encontrado um admin com o ID informado.");
+            }
+            
         }
 
     }

@@ -15,13 +15,18 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 
 
 @Entity
 @Table(name = "TB_EVENT")
 public class Event implements Serializable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @OneToMany(mappedBy = "event")
     private List<Ticket> tickets = new ArrayList<>();
@@ -31,11 +36,8 @@ public class Event implements Serializable{
 
     @ManyToOne
     @JoinColumn(name="ADMIN_USER_ID")
+    @NotNull(message = "ERRO - O preenchimento do campo 'adminId' e obrigatorio!")
     private Admin admin;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     //Vai deletar isso daqui{
         private String place;
@@ -49,36 +51,34 @@ public class Event implements Serializable{
         }
     //}Até aqui
 
-    @NotBlank(message = "ERRO - O preenchimento do campo 'name' e obrigatorio!")
+    
     private String name;
-
-    @NotBlank(message = "ERRO - O preenchimento do campo 'description' e obrigatorio!")
     private String description;
-
-    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalDate startDate;
-
-    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalDate endDate;
-    
-    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalTime startTime;  
-    
-    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalTime endTime;
-    
-    @NotBlank(message = "ERRO - O preenchimento do campo 'emailContact' e obrigatorio!")
     private String emailContact;
-    
-    @NotNull(message = "ERRO - O preenchimento do campo 'amountFreeTickets' e obrigatorio!")
     private Long amountFreeTickets;
-    
-    @NotNull(message = "ERRO - O preenchimento do campo 'amountPaidTickets' e obrigatorio!")
     private Long amountPaidTickets;
-    
-    @NotNull(message = "ERRO - O preenchimento do campo 'ticketPrice' e obrigatorio!")
     private Double ticketPrice;
 
+
+    
+
+    public Event(EventCreateDTO dto, Admin adm){
+        setAdmin(adm);
+        setName(dto.getName());
+        setDescription(dto.getDescription());
+        setEmailContact(dto.getEmailContact());
+        setAmountFreeTickets(dto.getAmountFreeTickets());
+        setAmountPaidTickets(dto.getAmountPaidTickets());
+        setStartDate(dto.getStartDate());
+        setEndDate(dto.getEndDate());
+        setStartTime(dto.getStartTime());
+        setEndTime(dto.getEndTime());
+        setTicketPrice(dto.getTicketPrice());
+    }
 
     public List<Place> getPlaces() {
         return places;
