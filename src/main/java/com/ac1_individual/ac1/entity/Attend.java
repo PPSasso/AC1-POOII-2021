@@ -3,6 +3,7 @@ package com.ac1_individual.ac1.entity;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -13,11 +14,12 @@ public class Attend extends BaseUser {
     
     private Double balance;
 
+    @OneToMany
     private ArrayList<Ticket> tickets = new ArrayList<>();
 
     public Attend() {
     }
-
+    
     public ArrayList<Ticket> getTickets() {
         return tickets;
     }

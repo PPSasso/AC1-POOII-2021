@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,10 +30,21 @@ public class Event implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
+    //Vai deletar isso daqui{
+        private String place;
+        
+        public String getPlace() {
+            return place;
+        }
+
+        public void setPlace(String place) {
+            this.place = place;
+        }
+    //}Até aqui
+
     private String name;
     private String description;
-    private String place;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
@@ -42,8 +54,12 @@ public class Event implements Serializable{
     private Long amountPaidTickets;
     private Double ticketPrice;
     
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name="ADMIN_USER_ID")
+=======
+    @OneToOne
+>>>>>>> 45365c0aec1384af1781796c1f556c35c3fc0c37
     private Admin admin;
     
     public List<Place> getPlaces() {
@@ -111,12 +127,6 @@ public class Event implements Serializable{
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public String getPlace() {
-        return place;
-    }
-    public void setPlace(String place) {
-        this.place = place;
     }
     public LocalDate getStartDate() {
         return startDate;

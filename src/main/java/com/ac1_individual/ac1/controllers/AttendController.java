@@ -3,7 +3,7 @@ package com.ac1_individual.ac1.controllers;
 import java.net.URI;
 
 import com.ac1_individual.ac1.entity.Attend;
-import com.ac1_individual.ac1.services.AttendeeService;
+import com.ac1_individual.ac1.services.AttendService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-public class AttendeesController {
+public class AttendController {
     
     @Autowired
-    AttendeeService service;
+    AttendService service;
 
     @GetMapping
     public ResponseEntity<Page<Attend>> getAttends(
