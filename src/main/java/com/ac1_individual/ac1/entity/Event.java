@@ -10,12 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
@@ -26,24 +26,17 @@ public class Event implements Serializable{
     @OneToMany(mappedBy = "event")
     private List<Ticket> tickets = new ArrayList<>();
     
-    @ManyToMany // (mappedBy = "events")
+    @ManyToMany(mappedBy = "events")
     private List<Place> places = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="ADMIN_USER_ID")
+    private Admin admin;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //Vai deletar isso daqui{
-        private String place;
-        
-        public String getPlace() {
-            return place;
-        }
-
-        public void setPlace(String place) {
-            this.place = place;
-        }
-    //}Até aqui
     @NotBlank(message = "ERRO - O preenchimento do campo 'name' e obrigatorio!")
     private String name;
 
@@ -73,16 +66,10 @@ public class Event implements Serializable{
     
     @NotNull(message = "ERRO - O preenchimento do campo 'ticketPrice' e obrigatorio!")
     private Double ticketPrice;
-    
-    @OneToOne
-    private Admin admin;
-    
+
+
     public List<Place> getPlaces() {
         return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
     }
     
     public void addPlaces(Place place) {
