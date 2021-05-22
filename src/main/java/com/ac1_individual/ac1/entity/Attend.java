@@ -7,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "TB_ATTEND")
 @PrimaryKeyJoinColumn(name = "ATTEND_BASEUSER_ID")
 public class Attend extends BaseUser {
     
+    @NotNull(message = "ERRO - O preenchimento do campo 'balance' e obrigatorio!")
     private Double balance;
 
     @OneToMany

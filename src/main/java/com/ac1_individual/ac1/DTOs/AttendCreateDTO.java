@@ -1,5 +1,7 @@
 package com.ac1_individual.ac1.DTOs;
 
+import com.ac1_individual.ac1.entity.Attend;
+
 public class AttendCreateDTO {
     
     private long id;
@@ -7,6 +9,16 @@ public class AttendCreateDTO {
     private String email;
     private Double balance;
     
+    public AttendCreateDTO(Attend attend) {
+        setId(attend.getId());
+        setName(attend.getName());
+        setEmail(attend.getEmail());
+        setBalance(attend.getBalance());
+    }
+
+    public AttendCreateDTO() {
+    }
+
     public long getId() {
         return id;
     }

@@ -8,6 +8,7 @@ import com.ac1_individual.ac1.services.EventService;
 import com.ac1_individual.ac1.services.TicketService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,7 @@ public class EventController {
     TicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@RequestBody Event eventIn)
+    public ResponseEntity<Event> createEvent(@Validated @RequestBody Event eventIn)
     {
         Event newEvent = eventService.createEvent(eventIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newEvent.getId()).toUri();

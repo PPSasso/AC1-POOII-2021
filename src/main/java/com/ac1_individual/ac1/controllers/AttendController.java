@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,10 +43,18 @@ public class AttendController {
 
     }
 
-    @PostMapping
-    public ResponseEntity<Attend> createEvent(@RequestBody Attend AttendIn)
+    @GetMapping("{id}")
+    public ResponseEntity<Attend> getAttendById(@PathVariable long id)
     {
-        Attend newAttend = service.createAttend(AttendIn);
+        Attend attend = service.getAttendById(id);
+
+        return ResponseEntity.ok().body(attend);
+    }
+
+    @PostMapping
+    public ResponseEntity<Attend> createEvent(@Validated @RequestBody Attend attendIn)
+    {
+        Attend newAttend = service.createAttend(attendIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAttend.getId()).toUri();
         return ResponseEntity.created(uri).body(newAttend);
     }
@@ -54,5 +64,12 @@ public class AttendController {
     {
         Attend event = service.updateAttend(eventIn, id);
         return ResponseEntity.ok().body(event);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable long id)
+    {
+        service.deleteAttend(id);
+        return ResponseEntity.noContent().build();
     }
 }
