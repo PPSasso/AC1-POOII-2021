@@ -1,11 +1,14 @@
 package com.ac1_individual.ac1.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +20,9 @@ public class Place implements Serializable{
     long id;
     String name;
     String address;
+
+    @ManyToMany
+    private List<Event> events = new ArrayList<>();
 
     public Place(){
 
@@ -47,7 +53,12 @@ public class Place implements Serializable{
     public void setAddress(String address) {
         this.address = address;
     }
-    
+    public List<Event> getEvents() {
+        return events;
+    }
+    public void addEvent(Event event) {
+        this.events.add(event);
+    }
 
     @Override
     public int hashCode() {
@@ -70,4 +81,8 @@ public class Place implements Serializable{
             return false;
         return true;
     }
+
+
+
+    
 }

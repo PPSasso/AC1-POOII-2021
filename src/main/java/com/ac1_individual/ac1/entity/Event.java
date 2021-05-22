@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,24 +23,16 @@ public class Event implements Serializable{
     @OneToMany(mappedBy = "event")
     private List<Ticket> tickets = new ArrayList<>();
     
-    @ManyToMany // (mappedBy = "events")
+    @ManyToMany(mappedBy = "events")
     private List<Place> places = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name="ADMIN_USER_ID")
+    private Admin admin;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    //Vai deletar isso daqui{
-        private String place;
-        
-        public String getPlace() {
-            return place;
-        }
-
-        public void setPlace(String place) {
-            this.place = place;
-        }
-    //}Até aqui
 
     private String name;
     private String description;
@@ -53,21 +44,10 @@ public class Event implements Serializable{
     private Long amountFreeTickets;
     private Long amountPaidTickets;
     private Double ticketPrice;
-    
-<<<<<<< HEAD
-    @ManyToOne
-    @JoinColumn(name="ADMIN_USER_ID")
-=======
-    @OneToOne
->>>>>>> 45365c0aec1384af1781796c1f556c35c3fc0c37
-    private Admin admin;
-    
+
+
     public List<Place> getPlaces() {
         return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
     }
     
     public void addPlaces(Place place) {
