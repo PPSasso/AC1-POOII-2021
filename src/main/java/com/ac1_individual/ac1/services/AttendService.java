@@ -10,8 +10,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
+@Service
 public class AttendService {
 
     @Autowired
@@ -19,7 +22,7 @@ public class AttendService {
 
     public Page<Attend> getAttends(PageRequest pageRequest) {
         
-        Page<Attend> pages = repo.find(pageRequest);
+        Page<Attend> pages = repo.findAll(pageRequest);
 
         return pages;
     }

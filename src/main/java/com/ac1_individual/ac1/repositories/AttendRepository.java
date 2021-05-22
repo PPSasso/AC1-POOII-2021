@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttendRepository extends JpaRepository<Attend, Long> {
     
-    public Page<Attend> find(Pageable pageRequest);
+    public Page<Attend> findAll(Pageable pageRequest);
 }

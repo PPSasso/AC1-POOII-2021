@@ -23,6 +23,16 @@ public class Attend extends BaseUser {
     public Attend() {
     }
     
+    public Attend(long id, String name, String email,
+            @NotNull(message = "ERRO - O preenchimento do campo 'balance' e obrigatorio!") Double balance,
+            List<Ticket> tickets) {
+        super(id, name, email);
+        this.balance = balance;
+        this.tickets = tickets;
+    }
+
+
+
     public List<Ticket> getTickets() {
         return tickets;
     }
