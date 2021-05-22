@@ -1,6 +1,10 @@
 package com.ac1_individual.ac1.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -10,6 +14,10 @@ import javax.persistence.Table;
 public class Admin extends BaseUser{
     
     private String phoneNumber; 
+
+    @OneToMany(mappedBy = "admin")
+    private List<Event> events = new ArrayList<>();
+    
 
     public Admin() {
     }
@@ -30,4 +38,14 @@ public class Admin extends BaseUser{
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void addEvent(Event events) {
+        this.events.add(events);
+    }
+
+    
 }

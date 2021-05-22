@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,7 +42,8 @@ public class Event implements Serializable{
     private Long amountPaidTickets;
     private Double ticketPrice;
     
-    //@Anotação
+    @ManyToOne
+    @JoinColumn(name="ADMIN_USER_ID")
     private Admin admin;
     
     public List<Place> getPlaces() {

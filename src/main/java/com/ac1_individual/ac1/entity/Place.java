@@ -6,17 +6,48 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="TB_PLACE")
 public class Place implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-
     String name;
     String address;
 
+    public Place(){
+
+    }
+    public Place(long id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
+
+    
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
 
     @Override
     public int hashCode() {
@@ -39,25 +70,4 @@ public class Place implements Serializable{
             return false;
         return true;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    
 }
