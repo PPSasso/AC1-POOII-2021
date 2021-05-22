@@ -7,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "TB_ADMIN")
 @PrimaryKeyJoinColumn(name = "BaseUser_ID")
 public class Admin extends BaseUser{
     
+    @NotBlank(message = "ERRO - O preenchimento do campo 'PhoneNumber' e obrigatorio!")
     private String phoneNumber; 
 
     @OneToMany(mappedBy = "admin")
