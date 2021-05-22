@@ -11,15 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
+@RestController
+@RequestMapping("/admins")
 public class AdminsController {
     
     @Autowired
@@ -42,6 +46,15 @@ public class AdminsController {
 
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<Admin> getAdminById(@PathVariable long id)
+    {
+        Admin admin = service.getAdminById(id);
+
+        return ResponseEntity.ok().body(admin);
+    }
+
+
     @PostMapping
     public ResponseEntity<Admin> createEvent(@RequestBody Admin AdminIn)
     {
@@ -55,5 +68,12 @@ public class AdminsController {
     {
         Admin event = service.updateAdmin(eventIn, id);
         return ResponseEntity.ok().body(event);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable long id)
+    {
+        service.deleteAdmin(id);
+        return ResponseEntity.noContent().build();
     }
 }
