@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.EventRepository;
+import com.ac1_individual.ac1.repositories.PlaceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,30 +20,32 @@ import org.springframework.web.server.ResponseStatusException;
 public class EventService {
 
     @Autowired
-    EventRepository repo;
+    EventRepository eventRepo;
+    
+    @Autowired
+    PlaceRepository placeRepo;
 
     public Event createEvent(Event eventIn) {
-        Event newEvent;
         
         if(eventIn.getStartDate().isAfter(eventIn.getEndDate())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
         }
         else{
-            return newEvent = repo.save(eventIn);
+            return eventRepo.save(eventIn);
         }
 
     }
 
     public Page<Event> getEvents(Pageable pageRequest, String name, String place, String startDate, String description){
         LocalDate date = LocalDate.parse(startDate);
-        Page<Event> pages = repo.find(pageRequest, name, place, date, description);
+        Page<Event> pages = eventRepo.find(pageRequest, name, place, date, description);
 
         return pages;
     }
 
     public Event updateEvent(EventUpdateDTO eventIn, long id) {
         try{
-            Event event = repo.findById(id).get();
+            Event event = eventRepo.findById(id).get();
             event.setDescription(eventIn.getDescription());
             event.setPlace(eventIn.getPlace());
             event.setEmailContact(eventIn.getEmail());
@@ -52,11 +55,17 @@ public class EventService {
             event.setEndTime(eventIn.getEndTime());
             event.setTicketPrice(eventIn.getTicketPrice());
 
+            // try{
+            //     event.addPlaces(placeRepo.findById(eventIn.getPlaceId()).get());
+            // }catch(NoSuchElementException e){
+            //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: O local do evento (place) não existe.");
+            // }
+
             if(event.getStartDate().isAfter(event.getEndDate())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
             }
             else{
-                repo.save(event);
+                eventRepo.save(event);
             }
 
             return event;
@@ -67,7 +76,7 @@ public class EventService {
 
     public void deleteEvent(long id) {
         try{
-            repo.deleteById(id);
+            eventRepo.deleteById(id);
         }catch(EmptyResultDataAccessException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
@@ -75,7 +84,7 @@ public class EventService {
 
     public Event getEventById(long id) {
         try{
-            Event event = repo.findById(id).get();
+            Event event = eventRepo.findById(id).get();
             
             return event;
         }catch(NoSuchElementException e){
