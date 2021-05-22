@@ -14,6 +14,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "TB_EVENT")
@@ -40,16 +44,34 @@ public class Event implements Serializable{
             this.place = place;
         }
     //}Até aqui
-
+    @NotBlank(message = "ERRO - O preenchimento do campo 'name' e obrigatorio!")
     private String name;
+
+    @NotBlank(message = "ERRO - O preenchimento do campo 'description' e obrigatorio!")
     private String description;
+
+    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalDate startDate;
+
+    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalDate endDate;
-    private LocalTime startTime;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
+    private LocalTime startTime;  
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
     private LocalTime endTime;
+    
+    @NotBlank(message = "ERRO - O preenchimento do campo 'emailContact' e obrigatorio!")
     private String emailContact;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'amountFreeTickets' e obrigatorio!")
     private Long amountFreeTickets;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'amountPaidTickets' e obrigatorio!")
     private Long amountPaidTickets;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'ticketPrice' e obrigatorio!")
     private Double ticketPrice;
     
     @OneToOne

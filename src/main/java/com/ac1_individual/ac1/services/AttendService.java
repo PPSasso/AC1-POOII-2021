@@ -14,5 +14,9 @@ public class AttendService {
     public Attend createAttend(Attend attendIn) {
         return null;
     }
+
+    public Attend updateAttend(Attend eventIn, long id) {
+        return null;
+    }
     
 }

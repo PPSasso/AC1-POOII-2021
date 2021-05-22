@@ -1,6 +1,7 @@
 package com.ac1_individual.ac1.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -15,16 +16,16 @@ public class Attend extends BaseUser {
     private Double balance;
 
     @OneToMany
-    private ArrayList<Ticket> tickets = new ArrayList<>();
+    private List<Ticket> tickets = new ArrayList<>();
 
     public Attend() {
     }
     
-    public ArrayList<Ticket> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(ArrayList<Ticket> tickets) {
+    public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
 
