@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name="TB_PLACE")
@@ -18,7 +19,9 @@ public class Place implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @NotBlank(message = "ERRO - O preenchimento do campo 'Name' e obrigatorio!")
     String name;
+    @NotBlank(message = "ERRO - O preenchimento do campo 'Address' e obrigatorio!")
     String address;
 
     @ManyToMany
