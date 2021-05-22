@@ -37,6 +37,18 @@ public class Event implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    //Vai deletar isso daqui{
+        private String place;
+        
+        public String getPlace() {
+            return place;
+        }
+
+        public void setPlace(String place) {
+            this.place = place;
+        }
+    //}Até aqui
+
     @NotBlank(message = "ERRO - O preenchimento do campo 'name' e obrigatorio!")
     private String name;
 
