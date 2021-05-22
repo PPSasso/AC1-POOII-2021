@@ -10,14 +10,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+@RestController
+@RequestMapping("/places")
 public class PlaceController {
 
     @Autowired
@@ -41,8 +47,16 @@ public class PlaceController {
 
     }
     
+    @GetMapping("{id}")
+    public ResponseEntity<Place> getPlaceById(@PathVariable long id)
+    {
+        Place place = service.getPlaceById(id);
+
+        return ResponseEntity.ok().body(place);
+    }
+
     @PostMapping
-    public ResponseEntity<Place> createEvent(@RequestBody Place PlaceIn)
+    public ResponseEntity<Place> createEvent(@Validated @RequestBody Place PlaceIn)
     {
         Place newPlace = service.createPlace(PlaceIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPlace.getId()).toUri();
@@ -54,5 +68,12 @@ public class PlaceController {
     {
         Place event = service.updatePlace(eventIn, id);
         return ResponseEntity.ok().body(event);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletePlace(@PathVariable long id)
+    {
+        service.deletePlace(id);
+        return ResponseEntity.noContent().build();
     }
 }
