@@ -19,10 +19,7 @@ public class Ticket implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     
-    private enum type{
-        FREE,
-        PAID,
-    };
+    private TypeTicket type;
     private Instant date;
     private Double price;
 
@@ -33,6 +30,14 @@ public class Ticket implements Serializable {
     @ManyToOne
     @JoinColumn(name = "EVENT_ID")
     private Event event;
+
+    public TypeTicket getType() {
+        return type;
+    }
+
+    public void setType(TypeTicket type) {
+        this.type = type;
+    }
 
     public Event getEvent() {
         return event;
