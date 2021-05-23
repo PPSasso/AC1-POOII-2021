@@ -39,18 +39,6 @@ public class Event implements Serializable{
     @NotNull(message = "ERRO - O preenchimento do campo 'adminId' e obrigatorio!")
     private Admin admin;
 
-    //Vai deletar isso daqui{
-        private String place;
-        
-        public String getPlace() {
-            return place;
-        }
-
-        public void setPlace(String place) {
-            this.place = place;
-        }
-    //}Até aqui
-
     
     private String name;
     private String description;
@@ -63,8 +51,6 @@ public class Event implements Serializable{
     private Long amountPaidTickets;
     private Double ticketPrice;
 
-
-    
 
     public Event(EventCreateDTO dto, Admin adm){
         setAdmin(adm);
