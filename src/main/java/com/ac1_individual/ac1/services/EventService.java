@@ -59,9 +59,10 @@ public class EventService {
 
     }
 
-    public Page<Event> getEvents(Pageable pageRequest, String name, String place, String startDate, String description){
+    public Page<Event> getEvents(Pageable pageRequest, String name, String startDate, String description){
         LocalDate date = LocalDate.parse(startDate);
-        Page<Event> pages = eventRepo.find(pageRequest, name, place, date, description);
+        Page<Event> pages = eventRepo.find(pageRequest, name, date, description);
+
 
         return pages;
     }
@@ -70,13 +71,17 @@ public class EventService {
         try{
             Event event = eventRepo.findById(id).get();
             event.setDescription(eventIn.getDescription());
-            event.setPlace(eventIn.getPlace());
-            event.setEmailContact(eventIn.getEmail());
+            event.setEmailContact(eventIn.getEmailContact());
             event.setStartDate(eventIn.getStartDate());
             event.setEndDate(eventIn.getEndDate());
             event.setStartTime(eventIn.getStartTime());
             event.setEndTime(eventIn.getEndTime());
             event.setTicketPrice(eventIn.getTicketPrice());
+            try{
+                event.setAdmin(adminRepo.findById(eventIn.getAdminId()).get());
+            } catch(NoSuchElementException e){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: Nao foi encontrado um admin com o ID informado.");
+            }
 
             // try{
             //     event.addPlaces(placeRepo.findById(eventIn.getPlaceId()).get());

@@ -80,6 +80,9 @@ public class Event implements Serializable{
         setTicketPrice(dto.getTicketPrice());
     }
 
+    public Event() {
+    }
+
     public List<Place> getPlaces() {
         return places;
     }

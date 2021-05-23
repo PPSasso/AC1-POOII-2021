@@ -1,38 +1,71 @@
-package com.ac1_individual.ac1.entity;
+package com.ac1_individual.ac1.DTOs;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import com.ac1_individual.ac1.entity.Admin; 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+public class AdminReadDTO {
 
-@Entity
-@Table(name = "TB_ADMIN")
-@PrimaryKeyJoinColumn(name = "BaseUser_ID")
-public class Admin extends BaseUser{
-    
-    @NotBlank(message = "ERRO - O preenchimento do campo 'PhoneNumber' e obrigatorio!")
+    private long id;
+    private String name;
+    private String email;
     private String phoneNumber; 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "admin")
-    private List<Event> events = new ArrayList<>();
+    private List<EventCreateDTO> events = new ArrayList<>();
     
 
-    public Admin() {
+    public AdminReadDTO() {
     }
     
-    public Admin(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public AdminReadDTO(Admin admin, List<EventCreateDTO> events) {
+        setId(admin.getId());
+        setName(admin.getName());
+        setPhoneNumber(admin.getPhoneNumber());
+        setEvents(events);
     }
 
-    public Admin(long id, String name, String email, String phoneNumber) {
-        super(id, name, email);
+    public long getId() {
+        return id;
+    }
+
+
+
+    public void setEvents(List<EventCreateDTO> events) {
+        this.events = events;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
+
+    public String getName() {
+        return name;
+    }
+
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+
+    public String getEmail() {
+        return email;
+    }
+
+
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+
+    public AdminReadDTO(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -44,11 +77,11 @@ public class Admin extends BaseUser{
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Event> getEvents() {
+    public List<EventCreateDTO> getEvents() {
         return events;
     }
 
-    public void addEvent(Event events) {
+    public void addEvent(EventCreateDTO events) {
         this.events.add(events);
     }
 
@@ -69,7 +102,7 @@ public class Admin extends BaseUser{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Admin other = (Admin) obj;
+        AdminReadDTO other = (AdminReadDTO) obj;
         if (events == null) {
             if (other.events != null)
                 return false;
@@ -82,6 +115,5 @@ public class Admin extends BaseUser{
             return false;
         return true;
     }
-
     
 }

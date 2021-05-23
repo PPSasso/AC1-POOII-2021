@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.ac1_individual.ac1.entity.Event;
+
 
 public class EventCreateDTO {
 
@@ -46,7 +48,26 @@ public class EventCreateDTO {
     
     private AdminDTO admin;
     
+
+    public EventCreateDTO(Event event){
+        
+        setId(event.getId());
+        setName(event.getName());
+        setDescription(event.getDescription());
+        setStartDate(event.getStartDate());
+        setEndDate(event.getEndDate());
+        setStartTime(event.getStartTime());
+        setEndTime(event.getEndTime());
+        setEmailContact(event.getEmailContact());
+        setAmountFreeTickets(event.getAmountFreeTickets());
+        setAmountPaidTickets(event.getAmountPaidTickets());
+        setAdminId(event.getAdmin().getId());
+    }
+
     
+    public EventCreateDTO() {
+    }
+
     public long getId() {
         return id;
     }

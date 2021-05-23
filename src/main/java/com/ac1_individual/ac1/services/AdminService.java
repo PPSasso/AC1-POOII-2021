@@ -1,11 +1,17 @@
 package com.ac1_individual.ac1.services;
 
+// import java.util.ArrayList;
+// import java.util.List;
 import java.util.NoSuchElementException;
 
+// import com.ac1_individual.ac1.DTOs.AdminReadDTO;
+// import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.entity.Admin;
+// import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.AdminRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +33,17 @@ public class AdminService {
     }
 
     public Admin createAdmin(Admin adminIn) {
+
+        // List<EventCreateDTO> events = new ArrayList<>();
+
+        // for(Event e : adminIn.getEvents()){
+        //     EventCreateDTO dto = new EventCreateDTO(e);
+
+        //     events.add(dto);
+        // }
+
+        // AdminReadDTO adminDTO = new AdminReadDTO(adminIn, events);
+        
 
         return repo.save(adminIn);
     }
@@ -51,6 +68,8 @@ public class AdminService {
             repo.deleteById(id);
         }catch(EmptyResultDataAccessException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+        }catch(DataIntegrityViolationException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "ERRO DE SQL: A entidade Admin está associada a um evento. Nao pode ser deletada no estado atual.");
         }
     }
 

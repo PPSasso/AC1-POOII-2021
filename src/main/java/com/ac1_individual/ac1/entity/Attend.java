@@ -17,7 +17,7 @@ public class Attend extends BaseUser {
     @NotNull(message = "ERRO - O preenchimento do campo 'balance' e obrigatorio!")
     private Double balance;
 
-    @OneToMany
+    @OneToMany(mappedBy = "attend")
     private List<Ticket> tickets = new ArrayList<>();
 
     public Attend() {

@@ -3,25 +3,87 @@ package com.ac1_individual.ac1.DTOs;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.ac1_individual.ac1.entity.Event;
 
 public class EventUpdateDTO {
 
-    long id;
-    String description;
-    String place;
-    LocalDate startDate;
-    LocalDate endDate;
-    LocalTime startTime;
-    LocalTime endTime;
-    String email;
-    Long amountFreeTickets;
-    Long amountPaidTickets;
+    private long id;
+
+    @NotBlank(message = "ERRO - O preenchimento do campo 'name' e obrigatorio!")
+    private String name;
+    
+    @NotBlank(message = "ERRO - O preenchimento do campo 'description' e obrigatorio!")
+    private String description;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'startDate' e obrigatorio!")
+    private LocalDate startDate;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'endDate' e obrigatorio!")
+    private LocalDate endDate;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'startTime' e obrigatorio!")
+    private LocalTime startTime;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'endTime' e obrigatorio!")
+    private LocalTime endTime;
+    
+    @NotBlank(message = "ERRO - O preenchimento do campo 'emailContact' e obrigatorio!")
+    private String emailContact;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'amountFreeTickets' e obrigatorio!")
+    private Long amountFreeTickets;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'amountPaidTickets' e obrigatorio!")
+    private Long amountPaidTickets;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'ticketPrice' e obrigatorio!")
+    private Double ticketPrice;
+    
+    @NotNull(message = "ERRO - O preenchimento do campo 'adminId' e obrigatorio!")
+    private Long adminId;
+    
+    public EventUpdateDTO(Event event){
+        
+        setId(event.getId());
+        setName(event.getName());
+        setDescription(event.getDescription());
+        setStartDate(event.getStartDate());
+        setEndDate(event.getEndDate());
+        setStartTime(event.getStartTime());
+        setEndTime(event.getEndTime());
+        setEmailContact(event.getEmailContact());
+        setAmountFreeTickets(event.getAmountFreeTickets());
+        setAmountPaidTickets(event.getAmountPaidTickets());
+        setAdminId(event.getAdmin().getId());
+    }
+    
+    public EventUpdateDTO(){
+    }
+    
+    
+    public Long getAdminId() {
+        return adminId;
+    }
+    
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
     public Long getAmountFreeTickets() {
         return amountFreeTickets;
     }
-
+    
     public void setAmountFreeTickets(Long amountFreeTickets) {
         this.amountFreeTickets = amountFreeTickets;
     }
@@ -41,22 +103,6 @@ public class EventUpdateDTO {
     public void setTicketPrice(Double ticketPrice) {
         this.ticketPrice = ticketPrice;
     }
-    Double ticketPrice; 
-
-    public EventUpdateDTO(){
-    }
-
-    public EventUpdateDTO(Event event){
-
-        setId(event.getId());
-        setDescription(event.getDescription());
-        setPlace(event.getPlace());
-        setStartDate(event.getStartDate());
-        setEndDate(event.getEndDate());
-        setStartTime(event.getStartTime());
-        setEndTime(event.getEndTime());
-        setEmail(event.getEmailContact());
-    }
 
     public long getId() {
         return id;
@@ -71,12 +117,7 @@ public class EventUpdateDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getPlace() {
-        return place;
-    }
-    public void setPlace(String place) {
-        this.place = place;
-    }
+    
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -101,11 +142,11 @@ public class EventUpdateDTO {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-    public String getEmail() {
-        return email;
+    public String getEmailContact() {
+        return emailContact;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailContact(String email) {
+        this.emailContact = email;
     }
     
 }

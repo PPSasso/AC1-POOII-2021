@@ -2,6 +2,7 @@ package com.ac1_individual.ac1.controllers;
 
 import java.net.URI;
 
+// import com.ac1_individual.ac1.DTOs.AdminReadDTO;
 import com.ac1_individual.ac1.entity.Admin;
 import com.ac1_individual.ac1.services.AdminService;
 
@@ -65,7 +66,7 @@ public class AdminsController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Admin> updateEvent(@RequestBody Admin eventIn, @PathVariable long id)
+    public ResponseEntity<Admin> updateEvent(@Validated @RequestBody Admin eventIn, @PathVariable long id)
     {
         Admin event = service.updateAdmin(eventIn, id);
         return ResponseEntity.ok().body(event);
