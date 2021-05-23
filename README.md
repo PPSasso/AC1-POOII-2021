@@ -11,7 +11,6 @@ Dados para serem inseridos
 { 
 "name": "Exposição de carros antigos", 
 "description": "Maior exposição de carros antigos da regiao", 
-"place": "Praça de Eventos, Votorantim", 
 "startDate": "2021-06-10", 
 "endDate": "2021-06-20", 
 "startTime": "08:00:00", 
@@ -25,7 +24,6 @@ Dados para serem inseridos
 { 
 "name": "Show Barões da Pisadinha", 
 "description": "Barões da Pisadinha Ao Vivo ", 
-"place": "Parque das Aguas, Sorocaba", 
 "startDate": "2021-09-16", 
 "endDate": "2021-09-16", 
 "startTime": "16:00:00", 
@@ -38,8 +36,7 @@ Dados para serem inseridos
 
 { 
 "name": "Festival de Balões", 
-"description": "Venha prestigiar os maiores baloes da região ", 
-"place": "Centro de balonismo, Boituva", 
+"description": "Venha prestigiar os maiores baloes da região ",
 "startDate": "2021-11-21",
 "endDate": "2021-11-22", 
 "startTime": "09:00:00", 
