@@ -48,8 +48,10 @@ Dados para serem inseridos
 "ticketPrice": 50.00, 
 "amountFreeTickets": 5, 
 "amountPaidTickets": 95, 
-"adminId": 3 }
+"adminId": 3 
+}
 
+__________________________________________________
 
 ## Admins:
 
@@ -92,6 +94,7 @@ ______________________________
 "balance": 10.00 
 }
 
+___________________________________________________________
 
 
 ## Places
