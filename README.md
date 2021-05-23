@@ -6,7 +6,7 @@
 
 Dados para serem inseridos
 
-Eventos:
+## Eventos:
 
 { 
 "name": "Exposição de carros antigos", 
@@ -49,9 +49,9 @@ Eventos:
 "amountFreeTickets": 5, 
 "amountPaidTickets": 95, 
 "adminId": 3 }
--------------------------------------------------------------------
 
-Admins:
+
+## Admins:
 
 { 
 "name": "Roberto Carlos", 
@@ -70,13 +70,13 @@ Admins:
 "email": "sac@balonismoboituva.br", 
 "phoneNumber": "15999999993" 
 }
--------------------------------------------------------------------
+______________________________
 
-Attendees
+## Attendees
 
 { 
 "name": "Gisele", 
-"email": "giseleoliveira@outook.br", 
+"email": "giseleoliveira@outlook.br", 
 "balance": 50.00 
 }
 
@@ -91,9 +91,10 @@ Attendees
 "email": "aloisiocarlos@gmail.br", 
 "balance": 10.00 
 }
--------------------------------------------------------------------
 
-Places
+
+
+## Places
 
 { 
 "name": "Praça de eventos", 
