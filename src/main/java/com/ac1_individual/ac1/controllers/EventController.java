@@ -86,4 +86,21 @@ public class EventController {
         return ResponseEntity.ok(events);
 
     }
+
+    @PostMapping("/{idEvent}/places/{idPlace}")
+    public ResponseEntity<Event> associatePlaceToEvent(@PathVariable Long idEvent, @PathVariable Long idPlace){
+
+        Event event = eventService.associatePlaceToEvent(idEvent, idPlace);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(event.getId()).toUri();
+        return ResponseEntity.created(uri).body(event);
+
+    }
+
+    @DeleteMapping("/{idEvent}/places/{idPlace}")
+    public ResponseEntity<Void> deletePlaceFromEvent(@PathVariable Long idEvent, @PathVariable Long idPlace){
+        eventService.deletePlaceFromEvent(idEvent, idPlace);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

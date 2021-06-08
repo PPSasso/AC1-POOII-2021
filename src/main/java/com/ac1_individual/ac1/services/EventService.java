@@ -8,6 +8,7 @@ import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Admin;
 import com.ac1_individual.ac1.entity.Event;
+import com.ac1_individual.ac1.entity.Place;
 import com.ac1_individual.ac1.repositories.AdminRepository;
 import com.ac1_individual.ac1.repositories.EventRepository;
 import com.ac1_individual.ac1.repositories.PlaceRepository;
@@ -32,10 +33,16 @@ public class EventService {
     @Autowired
     AdminRepository adminRepo;
 
+    @Autowired
+    PlaceService placeService;
+
     public EventCreateDTO createEvent(EventCreateDTO eventIn) {
         
         if(eventIn.getStartDate().isAfter(eventIn.getEndDate())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
+        }
+        else if(eventIn.getStartDate().isBefore(LocalDate.now())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Nao e possivel cadastrar um evento no passado.");
         }
         else{
 
@@ -43,6 +50,8 @@ public class EventService {
                 Admin admin = adminRepo.findById(eventIn.getAdminId()).get();
                 
                 Event event = new Event(eventIn, admin);
+
+                eventIn.setId(event.getId());
                 
                 eventRepo.save(event);
                 
@@ -83,14 +92,11 @@ public class EventService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: Nao foi encontrado um admin com o ID informado.");
             }
 
-            // try{
-            //     event.addPlaces(placeRepo.findById(eventIn.getPlaceId()).get());
-            // }catch(NoSuchElementException e){
-            //     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: O local do evento (place) não existe.");
-            // }
-
             if(event.getStartDate().isAfter(event.getEndDate())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Verifique as datas de inicio e fim do evento.");
+            }
+            else if(event.getStartDate().isBefore(LocalDate.now())){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE DATA: Nao e possivel alterar um evento no passado.");
             }
             else{
                 eventRepo.save(event);
@@ -118,6 +124,79 @@ public class EventService {
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         } 
+    }
+
+    public Event associatePlaceToEvent(Long idEvent, Long idPlace) {
+
+        Event event = getEventById(idEvent);
+        Place place = placeService.getPlaceById(idPlace);
+
+        for(Event e : eventRepo.findAll()){
+            if( 
+               (event.getStartDate().isEqual(e.getStartDate())) //Se iniciar no mesmo dia.
+            || (event.getStartDate().isEqual(e.getEndDate()))   //Se iniciar no mesmo dia que o outro acaba.
+            || (event.getEndDate().isEqual(e.getStartDate()))   //Se acabar no mesmo dia que o outro inicia.
+            || (event.getEndDate().isEqual(e.getEndDate()))     //Se acabar no mesmo dia.
+            ){
+                if( 
+                       ( ( event.getStartTime().compareTo(e.getStartTime()) > 0 ) && ( event.getStartTime().compareTo(e.getEndTime()) < 0 ) ) //Se iniciar no intervalo de outro evento.
+                    || ( ( event.getEndTime().compareTo(e.getStartTime()) > 0 ) && ( event.getEndTime().compareTo(e.getEndTime()) < 0 ) )     //Se acabar no intervalo de outro evento.
+                    || ( event.getStartTime().compareTo(e.getStartTime()) == 0 )    //Se iniciar no mesmo horario
+                    || ( event.getStartTime().compareTo(e.getEndTime()) == 0 )      //Se iniciar no horario de termino de outro evento
+                    || ( event.getEndTime().compareTo(e.getStartTime()) == 0 )      //Se acabar no horario de inicio de outro evento
+                    || ( event.getEndTime().compareTo(e.getEndTime()) == 0 )        //Se acabar no mesmo horario
+                    || ( ( event.getStartTime().compareTo(e.getStartTime()) < 0 ) && ( event.getEndTime().compareTo(e.getEndTime()) > 0) )     //Se iniciar antes e acabar depois de um evento.
+                    ){
+                        for(Place p : e.getPlaces()){
+                            if(p.equals(place)){
+                                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE LOCAL: O local ja possui um evento neste horario e data.");
+                            }
+                        }
+                    }    
+            }
+            else if( 
+               ( (event.getStartDate().isAfter(e.getStartDate()) ) && (event.getStartDate().isBefore(e.getEndDate()) ) )    //Se iniciar no intervalo de outro evento.
+            || ( (event.getEndDate().isAfter(e.getStartDate()) ) && (event.getEndDate().isBefore(e.getEndDate()) ) )        //Se acabar no intervalo de outro evento.
+            || ( (event.getStartDate().isBefore(e.getStartDate()) ) && (event.getEndDate().isAfter(e.getEndDate()) ) )      //Se iniciar antes e acabar depois de um evento.
+            ){
+                for(Place p : e.getPlaces()){
+                    if(p.equals(place)){
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE LOCAL: O local ja possui um evento neste horario e data.");
+                    }
+                }
+            }
+        }
+
+        event.addPlaces(place);
+
+        place.addEvent(event);
+
+        eventRepo.save(event);
+        placeRepo.save(place);
+
+        return event;
+    }
+
+    public void deletePlaceFromEvent(Long idEvent, Long idPlace) {
+        Event event = getEventById(idEvent);
+        placeService.getPlaceById(idPlace);
+
+        Boolean flag = true;
+
+        if(LocalDate.now().isAfter(event.getEndDate())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO: Nao e possivel deletar um evento passado.");
+        }
+
+        for(Place p : event.getPlaces()){
+            if(p.getId() == idPlace){
+                event.getPlaces().remove(p);
+                flag = false;
+            }
+        }
+
+        if(flag){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O PLACE informado nao se encontra na lista deste EVENT.");
+        }
     }
     
 }

@@ -3,6 +3,7 @@ package com.ac1_individual.ac1.DTOs;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +32,7 @@ public class EventCreateDTO {
     @NotNull(message = "ERRO - O preenchimento do campo 'endTime' e obrigatorio!")
     private LocalTime endTime;
     
+    @Email
     @NotBlank(message = "ERRO - O preenchimento do campo 'emailContact' e obrigatorio!")
     private String emailContact;
     
