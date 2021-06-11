@@ -58,7 +58,24 @@ public class Ticket implements Serializable {
     public long getId() {
         return id;
     }
-
+    
+    
+    public Instant getDate() {
+        return date;
+    }
+    
+    public void setDate(Instant date) {
+        this.date = date;
+    }
+    
+    public Double getPrice() {
+        return price;
+    }
+    
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -66,7 +83,7 @@ public class Ticket implements Serializable {
         result = prime * result + (int) (id ^ (id >>> 32));
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -80,23 +97,6 @@ public class Ticket implements Serializable {
             return false;
         return true;
     }
-
-    public Instant getDate() {
-        return date;
-    }
-
-    public void setDate(Instant date) {
-        this.date = date;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     
     
 }

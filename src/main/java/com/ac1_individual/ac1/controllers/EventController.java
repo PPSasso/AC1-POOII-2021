@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Event;
+import com.ac1_individual.ac1.entity.Ticket;
 import com.ac1_individual.ac1.services.EventService;
 import com.ac1_individual.ac1.services.TicketService;
 
@@ -101,6 +102,14 @@ public class EventController {
         eventService.deletePlaceFromEvent(idEvent, idPlace);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{idEvent}/tickets")
+    public ResponseEntity<Ticket> buyTicketFromEvent(@PathVariable Long idEvent, @RequestBody TicketDTO ticket){
+        Ticket newTicket = eventService.buyTicketFromEvent(idEvent, ticket);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newTicket.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(newTicket);
     }
 
 }
