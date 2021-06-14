@@ -45,6 +45,10 @@ public class Attend extends BaseUser {
         this.tickets.add(ticket);
     }
 
+    public void refundTicket(Ticket ticket) {
+        this.tickets.remove(ticket);
+    }
+
     public Attend(Double balance) {
         this.balance = balance;
     }

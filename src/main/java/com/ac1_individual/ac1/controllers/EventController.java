@@ -113,4 +113,11 @@ public class EventController {
         return ResponseEntity.created(uri).body(newTicket);
     }
 
+    @DeleteMapping("/{idEvent}/tickets/{idTicket}")
+    public ResponseEntity<Void> ticketRefund(@PathVariable Long idEvent, @PathVariable Long idTicket){
+        eventService.ticketRefund(idEvent, idTicket);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

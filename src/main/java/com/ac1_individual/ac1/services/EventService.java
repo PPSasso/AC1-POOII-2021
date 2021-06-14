@@ -12,10 +12,12 @@ import com.ac1_individual.ac1.entity.Attend;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.entity.Place;
 import com.ac1_individual.ac1.entity.Ticket;
+import com.ac1_individual.ac1.entity.TypeTicket;
 import com.ac1_individual.ac1.repositories.AdminRepository;
 import com.ac1_individual.ac1.repositories.AttendRepository;
 import com.ac1_individual.ac1.repositories.EventRepository;
 import com.ac1_individual.ac1.repositories.PlaceRepository;
+import com.ac1_individual.ac1.repositories.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,6 +41,9 @@ public class EventService {
     
     @Autowired
     AttendRepository attendRepo;
+    
+    @Autowired
+    TicketRepository ticketRepo;
 
     @Autowired
     PlaceService placeService;
@@ -234,6 +239,30 @@ public class EventService {
 
         // Usar cascade pra salvar o ticket sozinho? Ja fiz, testar pra ver se funfou.
         
+    }
+
+    public void ticketRefund(Long idEvent, Long idTicket) { //FALTA VALIDAR SE O EVENTO JA FOI OU NÃO! VER SE TA TUDO CERTINHO, FIZ SEM OLHAR!!
+        try{
+            Ticket ticket = ticketRepo.findById(idTicket).get();
+            
+            Event event = ticket.getEvent();
+            Attend attend = ticket.getAttend();
+
+            //Parte do Event
+            event.refundTicket(ticket);
+
+            //Parte do Attendee
+            attend.refundTicket(ticket);
+            if(ticket.getType() == TypeTicket.PAID){
+                attend.setBalance(ticket.getPrice());
+            }
+
+            //Parte do Ticket
+            ticketRepo.delete(ticket);
+
+        }catch(NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Ticket informado nao foi encontrado.");
+        }
     }
     
 }
