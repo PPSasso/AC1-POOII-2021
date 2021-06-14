@@ -7,9 +7,12 @@ import com.ac1_individual.ac1.DTOs.AdminDTO;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.entity.Admin;
+import com.ac1_individual.ac1.entity.Attend;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.entity.Place;
+import com.ac1_individual.ac1.entity.Ticket;
 import com.ac1_individual.ac1.repositories.AdminRepository;
+import com.ac1_individual.ac1.repositories.AttendRepository;
 import com.ac1_individual.ac1.repositories.EventRepository;
 import com.ac1_individual.ac1.repositories.PlaceRepository;
 
@@ -32,6 +35,9 @@ public class EventService {
     
     @Autowired
     AdminRepository adminRepo;
+    
+    @Autowired
+    AttendRepository attendRepo;
 
     @Autowired
     PlaceService placeService;
@@ -197,6 +203,20 @@ public class EventService {
         if(flag){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O PLACE informado nao se encontra na lista deste EVENT.");
         }
+    }
+
+    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO ticket){
+        try{
+            Event event = eventRepo.findById(idEvent).get();
+            Attend attend = attendRepo.findById(ticket.getAttend())
+
+            //precisa criar um ticket novo e associar ele tanto com o evento quanto com o attendee.
+
+            event.addTickets(ticket);
+        }catch(NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Evento informado nao foi encontrado.");
+        }
+
     }
     
 }
