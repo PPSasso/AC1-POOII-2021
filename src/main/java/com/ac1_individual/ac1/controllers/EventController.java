@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
+import com.ac1_individual.ac1.DTOs.TicketDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.entity.Ticket;
 import com.ac1_individual.ac1.services.EventService;

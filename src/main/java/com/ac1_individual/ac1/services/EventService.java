@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import com.ac1_individual.ac1.DTOs.AdminDTO;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
+import com.ac1_individual.ac1.DTOs.TicketDTO;
 import com.ac1_individual.ac1.entity.Admin;
 import com.ac1_individual.ac1.entity.Attend;
 import com.ac1_individual.ac1.entity.Event;
@@ -205,18 +206,34 @@ public class EventService {
         }
     }
 
-    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO ticket){
+    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){
         try{
-            Event event = eventRepo.findById(idEvent).get();
-            Attend attend = attendRepo.findById(ticket.getAttend())
-
-            //precisa criar um ticket novo e associar ele tanto com o evento quanto com o attendee.
-
-            event.addTickets(ticket);
+            eventRepo.findById(idEvent).get();
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Evento informado nao foi encontrado.");
         }
 
+        try{
+            attendRepo.findById(tDto.getAttendId()).get();
+        }catch(NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Attendee informado nao foi encontrado.");
+        }
+
+        Attend attend = attendRepo.findById(tDto.getAttendId()).get();
+        Event event = eventRepo.findById(idEvent).get();
+            
+        Ticket ticket = new Ticket(tDto, attend, event);
+
+        event.addTickets(ticket);
+        attend.addTickets(ticket);
+
+        eventRepo.save(event);
+        attendRepo.save(attend);
+
+        return ticket;
+
+        // Usar cascade pra salvar o ticket sozinho? Ja fiz, testar pra ver se funfou.
+        
     }
     
 }

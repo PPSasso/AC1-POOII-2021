@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.ac1_individual.ac1.DTOs.TicketDTO;
+
 @Entity
 @Table(name = "TB_TICKET")
 public class Ticket implements Serializable {
@@ -30,6 +32,17 @@ public class Ticket implements Serializable {
     @ManyToOne
     @JoinColumn(name = "EVENT_ID")
     private Event event;
+
+    
+
+    public Ticket(TicketDTO tDto, Attend attend, Event event) {
+        this.id = tDto.getId();
+        this.type = tDto.getType();
+        this.date = tDto.getDate();
+        this.price = tDto.getPrice();
+        this.attend = attend;
+        this.event = event;
+    }
 
     public TypeTicket getType() {
         return type;

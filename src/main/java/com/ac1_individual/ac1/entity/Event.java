@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +20,6 @@ import javax.validation.constraints.NotNull;
 
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 
-
 @Entity
 @Table(name = "TB_EVENT")
 public class Event implements Serializable{
@@ -28,7 +28,7 @@ public class Event implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST)
     private List<Ticket> tickets = new ArrayList<>();
     
     @ManyToMany(mappedBy = "events")
