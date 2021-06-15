@@ -111,4 +111,10 @@ ___________________________________________________________
 "address": "Rua dos balões, Boituva" 
 }
 
+___________________________________________________________
 
+## Modelo para compra de Tickets
+{
+    "attendId": 4,
+    "typeTicket": "free"
+}
