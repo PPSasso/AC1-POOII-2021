@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +55,7 @@ public class AttendController {
     }
 
     @PostMapping
-    public ResponseEntity<Attend> createEvent(@Validated @RequestBody Attend attendIn)
+    public ResponseEntity<Attend> createEvent(@RequestBody Attend attendIn)
     {
         Attend newAttend = service.createAttend(attendIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAttend.getId()).toUri();
