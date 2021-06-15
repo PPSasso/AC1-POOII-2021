@@ -35,6 +35,8 @@ public class AttendService {
             }
         }
 
+        attendIn.setBalance(0.00);
+
         return repo.save(attendIn);
     }
 
