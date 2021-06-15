@@ -1,13 +1,16 @@
 package com.ac1_individual.ac1.DTOs;
 
 import com.ac1_individual.ac1.entity.Place;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PlaceDTO{
     
  
-    long id;
-    String name;
-    String address;
+    private long id;
+    private String name;
+    private String address;
+    @JsonIgnore
+    private Long idEvent;
 
 
     public PlaceDTO(){
@@ -20,6 +23,12 @@ public class PlaceDTO{
     }
 
     
+    public Long getIdEvent() {
+        return idEvent;
+    }
+    public void setIdEvent(Long idEvent) {
+        this.idEvent = idEvent;
+    }
     public long getId() {
         return id;
     }

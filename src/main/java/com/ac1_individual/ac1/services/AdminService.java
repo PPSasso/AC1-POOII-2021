@@ -1,13 +1,8 @@
 package com.ac1_individual.ac1.services;
 
-// import java.util.ArrayList;
-// import java.util.List;
 import java.util.NoSuchElementException;
 
-// import com.ac1_individual.ac1.DTOs.AdminReadDTO;
-// import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.entity.Admin;
-// import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.repositories.AdminRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -18,13 +18,12 @@ public class Place implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
     @NotBlank(message = "ERRO - O preenchimento do campo 'Name' e obrigatorio!")
-    String name;
+    private String name;
     @NotBlank(message = "ERRO - O preenchimento do campo 'Address' e obrigatorio!")
-    String address;
+    private String address;
 
-    
     @ManyToMany
     private List<Event> events = new ArrayList<>();
 

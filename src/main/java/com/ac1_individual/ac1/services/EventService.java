@@ -213,7 +213,7 @@ public class EventService {
         }
     }
 
-    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){// FALTA VALIDAR SE A QUANTIDADE DE TICKETS PAGOS OU GRATUITOS VENDIDOS JA ATINGIRAM SEU LIMITE
+    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){
         try{
             eventRepo.findById(idEvent).get();
         }catch(NoSuchElementException e){
@@ -280,7 +280,7 @@ public class EventService {
         
     }
 
-    public void ticketRefund(Long idEvent, Long idTicket) { //VER SE TA TUDO CERTINHO, FIZ SEM OLHAR!!
+    public void ticketRefund(Long idEvent, Long idTicket) {
         try{
             Ticket ticket = ticketRepo.findById(idTicket).get();
             

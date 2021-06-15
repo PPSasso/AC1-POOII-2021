@@ -4,13 +4,13 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import com.ac1_individual.ac1.DTOs.EventAuxDTO;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
 import com.ac1_individual.ac1.DTOs.TicketDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.entity.Ticket;
 import com.ac1_individual.ac1.services.EventService;
-import com.ac1_individual.ac1.services.TicketService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,6 @@ public class EventController {
 
     @Autowired
     EventService eventService;
-
-    @Autowired
-    TicketService ticketService;
 
     @PostMapping
     public ResponseEntity<EventCreateDTO> createEvent(@Valid @RequestBody EventCreateDTO eventIn)
@@ -90,11 +87,12 @@ public class EventController {
     }
 
     @PostMapping("/{idEvent}/places/{idPlace}")
-    public ResponseEntity<Event> associatePlaceToEvent(@PathVariable Long idEvent, @PathVariable Long idPlace){
+    public ResponseEntity<EventAuxDTO> associatePlaceToEvent(@PathVariable Long idEvent, @PathVariable Long idPlace){
 
         Event event = eventService.associatePlaceToEvent(idEvent, idPlace);
+        EventAuxDTO dto = new EventAuxDTO(event, event.getAdmin());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(event.getId()).toUri();
-        return ResponseEntity.created(uri).body(event);
+        return ResponseEntity.created(uri).body(dto);
 
     }
 

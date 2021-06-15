@@ -1,4 +1,4 @@
-package com.ac1_individual.ac1.entity;
+package com.ac1_individual.ac1.DTOs;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -6,39 +6,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import com.ac1_individual.ac1.entity.Admin;
+import com.ac1_individual.ac1.entity.Event;
+import com.ac1_individual.ac1.entity.Place;
+import com.ac1_individual.ac1.entity.Ticket;
 
-import com.ac1_individual.ac1.DTOs.EventCreateDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+public class EventAuxDTO implements Serializable{
 
-@Entity
-@Table(name = "TB_EVENT")
-public class Event implements Serializable{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "event")
     private List<Ticket> tickets = new ArrayList<>();
     
-    @JsonIgnore
-    @ManyToMany(mappedBy = "events")
-    private List<Place> places = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name="ADMIN_USER_ID")
-    @NotNull(message = "ERRO - O preenchimento do campo 'adminId' e obrigatorio!")
+    private List<PlaceDTO> places = new ArrayList<>();
+    
     private Admin admin;
 
     
@@ -54,8 +34,9 @@ public class Event implements Serializable{
     private Double ticketPrice;
 
 
-    public Event(EventCreateDTO dto, Admin adm){
+    public EventAuxDTO(Event dto, Admin adm){
         setAdmin(adm);
+        setId(dto.getId());
         setName(dto.getName());
         setDescription(dto.getDescription());
         setEmailContact(dto.getEmailContact());
@@ -66,35 +47,42 @@ public class Event implements Serializable{
         setStartTime(dto.getStartTime());
         setEndTime(dto.getEndTime());
         setTicketPrice(dto.getTicketPrice());
+
+        List<PlaceDTO> placeList = new ArrayList<>();
+
+        for(Place e : dto.getPlaces()){
+            PlaceDTO place = new PlaceDTO(e);
+            placeList.add(place);
+        }
+
+        setTickets(dto.getTickets());
+        setPlaces(placeList);
+
+        //fazer um for each aqui pra lista de places e tickets pra transformar os dois pra DTO
     }
 
-    public Event() {
+    public EventAuxDTO() {
     }
 
-    public List<Place> getPlaces() {
+    public List<PlaceDTO> getPlaces() {
         return places;
     }
     
-    public void addPlaces(Place place) {
-        this.places.add(place);
-    }
     
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPlaces(List<PlaceDTO> places) {
+        this.places = places;
+    }
+
     public List<Ticket> getTickets() {
         return tickets;
     }
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
-    }
-    
-    public void addTickets(Ticket ticket) {
-        
-        this.tickets.add(ticket);
-    }
-
-    public void refundTicket(Ticket ticket) {
-        
-        this.tickets.remove(ticket);
     }
     
     public Admin getAdmin() {
@@ -167,25 +155,5 @@ public class Event implements Serializable{
     }
     public void setEmailContact(String emailContact) {
         this.emailContact = emailContact;
-    }
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Event other = (Event) obj;
-        if (id != other.id)
-            return false;
-        return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.ac1_individual.ac1.DTOs;
 
+import com.ac1_individual.ac1.entity.Ticket;
 import com.ac1_individual.ac1.entity.TypeTicket;
 
 import java.time.Instant;
@@ -18,6 +19,20 @@ public class TicketDTO {
 
     @NotNull(message = "ERRO: E necessario passar o id de um attendee para realizar a operacao!")
     private Long attendId;
+
+
+    public TicketDTO(Ticket t) {
+        type = t.getType();
+        date = t.getDate();
+        price = t.getPrice();
+        attendId = t.getAttend().getId();
+    }
+
+    
+
+    public TicketDTO() {
+    }
+
 
 
     public String getTypeTicket() {
