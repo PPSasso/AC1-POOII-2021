@@ -51,7 +51,13 @@ public class Attend extends BaseUser {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void addBalance(Double balance){
         this.balance += balance;
     }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    
 }

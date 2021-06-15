@@ -333,7 +333,7 @@ public class EventService {
         //Parte do Attendee
         attend.refundTicket(ticket);
         if(ticket.getType() == TypeTicket.PAID){
-            attend.setBalance(ticket.getPrice());
+            attend.addBalance(ticket.getPrice());
         }
 
         //Parte do Ticket
