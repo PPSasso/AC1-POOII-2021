@@ -281,31 +281,48 @@ public class EventService {
     }
 
     public void ticketRefund(Long idEvent, Long idTicket) {
+        Boolean found = false;
+
         try{
-            Ticket ticket = ticketRepo.findById(idTicket).get();
-            
-            Event event = ticket.getEvent();
-            Attend attend = ticket.getAttend();
-
-            if(LocalDate.now().isAfter(event.getStartDate())){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE REQUISICAO: Nao e permitido o reembolso de Ticket em um evento em andamento ou passado.");
+           for(Ticket t : eventRepo.findById(idEvent).get().getTickets()){
+                if(t.getId() == idTicket){
+                    found = true;
+                }
             }
-
-            //Parte do Event
-            event.refundTicket(ticket);
-
-            //Parte do Attendee
-            attend.refundTicket(ticket);
-            if(ticket.getType() == TypeTicket.PAID){
-                attend.setBalance(ticket.getPrice());
-            }
-
-            //Parte do Ticket
-            ticketRepo.delete(ticket);
-
         }catch(NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Evento informado nao foi encontrado.");
+        }
+
+        try {
+            ticketRepo.findById(idTicket).get();
+        } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Ticket informado nao foi encontrado.");
         }
+
+        if(!found){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Ticket informado nao pertence a este Event.");
+        }
+
+        Ticket ticket = ticketRepo.findById(idTicket).get();
+        
+        Event event = ticket.getEvent();
+        Attend attend = ticket.getAttend();
+
+        if(LocalDate.now().isAfter(event.getStartDate())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE REQUISICAO: Nao e permitido o reembolso de Ticket em um evento em andamento ou passado.");
+        }
+
+        //Parte do Event
+        event.refundTicket(ticket);
+
+        //Parte do Attendee
+        attend.refundTicket(ticket);
+        if(ticket.getType() == TypeTicket.PAID){
+            attend.setBalance(ticket.getPrice());
+        }
+
+        //Parte do Ticket
+        ticketRepo.delete(ticket);
     }
     
 }
