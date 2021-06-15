@@ -4,17 +4,29 @@ import com.ac1_individual.ac1.entity.TypeTicket;
 
 import java.time.Instant;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class TicketDTO {
 
-
-
-    private Long id;    
     private TypeTicket type;
     private Instant date;
     private Double price;
 
+    @NotBlank(message = "ERRO: E necessario passar o tipo do ticket!")
+    private String typeTicket;
+
+    @NotNull(message = "ERRO: E necessario passar o id de um attendee para realizar a operacao!")
     private Long attendId;
 
+
+    public String getTypeTicket() {
+        return typeTicket;
+    }
+
+    public void setTypeTicket(String typeTicket) {
+        this.typeTicket = typeTicket;
+    }
 
     public TypeTicket getType() {
         return type;
@@ -22,14 +34,6 @@ public class TicketDTO {
 
     public void setType(TypeTicket type) {
         this.type = type;
-    }
-
-    public long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getAttendId() {

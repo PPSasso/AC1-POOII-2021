@@ -49,15 +49,11 @@ public class Attend extends BaseUser {
         this.tickets.remove(ticket);
     }
 
-    public Attend(Double balance) {
-        this.balance = balance;
-    }
-
     public Double getBalance() {
         return balance;
     }
 
     public void setBalance(Double balance) {
-        this.balance = balance;
+        this.balance += balance;
     }
 }

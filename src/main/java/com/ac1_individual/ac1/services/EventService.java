@@ -1,5 +1,6 @@
 package com.ac1_individual.ac1.services;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
@@ -186,6 +187,7 @@ public class EventService {
         eventRepo.save(event);
         placeRepo.save(place);
 
+
         return event;
     }
 
@@ -211,42 +213,83 @@ public class EventService {
         }
     }
 
-    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){
+    public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){// FALTA VALIDAR SE A QUANTIDADE DE TICKETS PAGOS OU GRATUITOS VENDIDOS JA ATINGIRAM SEU LIMITE
         try{
             eventRepo.findById(idEvent).get();
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Evento informado nao foi encontrado.");
         }
 
+        
         try{
             attendRepo.findById(tDto.getAttendId()).get();
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Attendee informado nao foi encontrado.");
         }
-
+        
         Attend attend = attendRepo.findById(tDto.getAttendId()).get();
         Event event = eventRepo.findById(idEvent).get();
+        int paidTickets = 0;
+        int freeTickets = 0;
+
+        //Contagem de tickets pagos e gratuitos:
+        for(Ticket t : event.getTickets()){
+            if(t.getType() == TypeTicket.PAID){
+                paidTickets = paidTickets + 1;
+            }else{
+                freeTickets = freeTickets + 1;
+            }
+        }
+        
+        if(event.getEndDate().isBefore(LocalDate.now())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE REQUISICAO: Nao e possivel comprar um ticket de um evento passado.");
+        }
+
+        if(tDto.getTypeTicket().toLowerCase().equalsIgnoreCase("paid")){
+            tDto.setType(TypeTicket.PAID);
+            if(paidTickets >= event.getAmountPaidTickets()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE REQUISICAO: Tickets pagos esgotados.");
+            }
+            tDto.setPrice(event.getTicketPrice());
             
+        }else if(tDto.getTypeTicket().toLowerCase().equalsIgnoreCase("free")){
+            tDto.setType(TypeTicket.FREE);
+            if(freeTickets>= event.getAmountPaidTickets()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE REQUISICAO: Tickets gratuitos esgotados.");
+            }
+            tDto.setPrice(0.0);
+
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE REQUISICAO: Tipo de Ticket invalido! Valores aceitos: PAID ou FREE");
+        }
+
+        tDto.setDate(Instant.now());
+
+
         Ticket ticket = new Ticket(tDto, attend, event);
+        
 
         event.addTickets(ticket);
         attend.addTickets(ticket);
 
+        ticketRepo.save(ticket);
         eventRepo.save(event);
         attendRepo.save(attend);
 
         return ticket;
-
-        // Usar cascade pra salvar o ticket sozinho? Ja fiz, testar pra ver se funfou.
         
     }
 
-    public void ticketRefund(Long idEvent, Long idTicket) { //FALTA VALIDAR SE O EVENTO JA FOI OU NÃO! VER SE TA TUDO CERTINHO, FIZ SEM OLHAR!!
+    public void ticketRefund(Long idEvent, Long idTicket) { //VER SE TA TUDO CERTINHO, FIZ SEM OLHAR!!
         try{
             Ticket ticket = ticketRepo.findById(idTicket).get();
             
             Event event = ticket.getEvent();
             Attend attend = ticket.getAttend();
+
+            if(LocalDate.now().isAfter(event.getStartDate())){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE REQUISICAO: Nao e permitido o reembolso de Ticket em um evento em andamento ou passado.");
+            }
 
             //Parte do Event
             event.refundTicket(ticket);

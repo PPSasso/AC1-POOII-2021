@@ -106,7 +106,7 @@ public class EventController {
     }
 
     @PostMapping("/{idEvent}/tickets")
-    public ResponseEntity<Ticket> buyTicketFromEvent(@PathVariable Long idEvent, @RequestBody TicketDTO ticket){
+    public ResponseEntity<Ticket> buyTicketFromEvent(@PathVariable Long idEvent,@Valid @RequestBody TicketDTO ticket){
         Ticket newTicket = eventService.buyTicketFromEvent(idEvent, ticket);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newTicket.getId()).toUri();
 

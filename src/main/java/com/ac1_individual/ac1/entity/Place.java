@@ -24,6 +24,7 @@ public class Place implements Serializable{
     @NotBlank(message = "ERRO - O preenchimento do campo 'Address' e obrigatorio!")
     String address;
 
+    
     @ManyToMany
     private List<Event> events = new ArrayList<>();
 

@@ -12,31 +12,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.ac1_individual.ac1.DTOs.TicketDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "TB_TICKET")
 public class Ticket implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     
     private TypeTicket type;
     private Instant date;
     private Double price;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ATTEND_BASEUSER_ID")
     private Attend attend;
     
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "EVENT_ID")
     private Event event;
 
     
 
+    public Ticket() {
+    }
+
     public Ticket(TicketDTO tDto, Attend attend, Event event) {
-        this.id = tDto.getId();
         this.type = tDto.getType();
         this.date = tDto.getDate();
         this.price = tDto.getPrice();
