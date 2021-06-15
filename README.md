@@ -11,8 +11,8 @@ Dados para serem inseridos
 { 
 "name": "Exposição de carros antigos", 
 "description": "Maior exposição de carros antigos da regiao", 
-"startDate": "2021-06-10", 
-"endDate": "2021-06-20", 
+"startDate": "2021-08-10", 
+"endDate": "2021-08-20", 
 "startTime": "08:00:00", 
 "endTime": "16:00:00", 
 "emailContact": "prefeituravotorantim@outlook.com", 
