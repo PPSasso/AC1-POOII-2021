@@ -28,17 +28,11 @@ public class AdminService {
     }
 
     public Admin createAdmin(Admin adminIn) {
-
-        // List<EventCreateDTO> events = new ArrayList<>();
-
-        // for(Event e : adminIn.getEvents()){
-        //     EventCreateDTO dto = new EventCreateDTO(e);
-
-        //     events.add(dto);
-        // }
-
-        // AdminReadDTO adminDTO = new AdminReadDTO(adminIn, events);
-        
+        for(Admin a : repo.findAll()){
+            if(a.getEmail().equalsIgnoreCase(adminIn.getEmail())){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE ENTIDADE: O email informado ja está sendo utilizado.");
+            }
+        }
 
         return repo.save(adminIn);
     }

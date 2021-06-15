@@ -29,6 +29,12 @@ public class AttendService {
 
     public Attend createAttend(Attend attendIn) {
 
+        for(Attend a : repo.findAll()){
+            if(a.getEmail().equalsIgnoreCase(attendIn.getEmail())){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE ENTIDADE: O email informado ja está sendo utilizado.");
+            }
+        }
+
         return repo.save(attendIn);
     }
 
