@@ -62,6 +62,9 @@ public class Place implements Serializable{
     public void addEvent(Event event) {
         this.events.add(event);
     }
+    public void removeEvent(Event event) {
+        this.events.remove(event);
+    }
 
     @Override
     public int hashCode() {

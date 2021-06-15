@@ -61,7 +61,7 @@ public class PlaceService {
             
             return place;
         }catch(NoSuchElementException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade Place nao foi encontrada.");
         } 
     }
 

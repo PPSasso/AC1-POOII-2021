@@ -2,12 +2,16 @@ package com.ac1_individual.ac1.services;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.ac1_individual.ac1.DTOs.AdminDTO;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
+import com.ac1_individual.ac1.DTOs.SuperDTO;
 import com.ac1_individual.ac1.DTOs.TicketDTO;
+import com.ac1_individual.ac1.DTOs.TicketListDTO;
 import com.ac1_individual.ac1.entity.Admin;
 import com.ac1_individual.ac1.entity.Attend;
 import com.ac1_individual.ac1.entity.Event;
@@ -125,7 +129,7 @@ public class EventService {
         try{
             eventRepo.deleteById(id);
         }catch(EmptyResultDataAccessException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade Event nao foi encontrada.");
         }
     }
 
@@ -135,7 +139,7 @@ public class EventService {
             
             return event;
         }catch(NoSuchElementException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade Event nao foi encontrada.");
         } 
     }
 
@@ -193,31 +197,42 @@ public class EventService {
 
     public void deletePlaceFromEvent(Long idEvent, Long idPlace) {
         Event event = getEventById(idEvent);
+        
         placeService.getPlaceById(idPlace);
+
+        List<Place> list = event.getPlaces();
 
         Boolean flag = true;
 
         if(LocalDate.now().isAfter(event.getEndDate())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO: Nao e possivel deletar um evento passado.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO: Nao e possivel deletar um Place de um Event no passado.");
         }
 
-        for(Place p : event.getPlaces()){
+        for(Place p : list){
             if(p.getId() == idPlace){
                 event.getPlaces().remove(p);
+                p.removeEvent(event);
+
                 flag = false;
+
+                placeRepo.save(p);
+
+                break;
             }
         }
 
         if(flag){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O PLACE informado nao se encontra na lista deste EVENT.");
         }
+
+        eventRepo.save(event);
     }
 
     public Ticket buyTicketFromEvent(Long idEvent, TicketDTO tDto){
         try{
             eventRepo.findById(idEvent).get();
         }catch(NoSuchElementException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Evento informado nao foi encontrado.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Event informado nao foi encontrado.");
         }
 
         
@@ -309,7 +324,7 @@ public class EventService {
         Attend attend = ticket.getAttend();
 
         if(LocalDate.now().isAfter(event.getStartDate())){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE REQUISICAO: Nao e permitido o reembolso de Ticket em um evento em andamento ou passado.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE REQUISICAO: Nao e permitido o reembolso de Ticket em um evento em andamento ou passado.");
         }
 
         //Parte do Event
@@ -323,6 +338,38 @@ public class EventService {
 
         //Parte do Ticket
         ticketRepo.delete(ticket);
+    }
+
+    public SuperDTO getEventTickets(Long idEvent) {
+        try {
+            Event event = eventRepo.findById(idEvent).get();
+            List<TicketListDTO> listTicket = new ArrayList<>();
+            long amPaidTickets = 0;
+            long amFreeTickets = 0;
+
+            for(Ticket t : event.getTickets()){
+                TicketListDTO dto = new TicketListDTO(t);
+                listTicket.add(dto);
+                if(t.getType() == TypeTicket.FREE){
+                    amFreeTickets = amFreeTickets + 1;
+                }else{
+                    amPaidTickets = amPaidTickets + 1;
+                }
+            }
+
+            SuperDTO superDTO = new SuperDTO(
+                listTicket,
+                event.getAmountFreeTickets(),
+                event.getAmountPaidTickets(),
+                amFreeTickets,
+                amPaidTickets
+            );
+
+            return superDTO;
+
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE BUSCA: O Event informado nao foi encontrado.");
+        }
     }
     
 }

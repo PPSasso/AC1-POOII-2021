@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.ac1_individual.ac1.DTOs.EventAuxDTO;
 import com.ac1_individual.ac1.DTOs.EventCreateDTO;
 import com.ac1_individual.ac1.DTOs.EventUpdateDTO;
+import com.ac1_individual.ac1.DTOs.SuperDTO;
 import com.ac1_individual.ac1.DTOs.TicketDTO;
 import com.ac1_individual.ac1.entity.Event;
 import com.ac1_individual.ac1.entity.Ticket;
@@ -116,6 +117,17 @@ public class EventController {
         eventService.ticketRefund(idEvent, idTicket);
 
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/{idEvent}/tickets")
+
+    public ResponseEntity<SuperDTO> getEventTickets(@PathVariable Long idEvent){
+        
+        SuperDTO superDTO = eventService.getEventTickets(idEvent);
+
+        return ResponseEntity.ok(superDTO);
+
     }
 
 }
