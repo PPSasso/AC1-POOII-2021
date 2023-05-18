@@ -10,7 +10,7 @@ services:
       - db-volume:/var/lib/postgresql/data
 
   api:
-    image: sistema/sistema
+    image: sistema/sistema-ac2
     environment:
       DB_HOST: database
     ports:
