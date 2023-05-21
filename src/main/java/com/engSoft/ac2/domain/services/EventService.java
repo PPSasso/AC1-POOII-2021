@@ -61,6 +61,11 @@ public class EventService {
         this.eventRepo = eventRepo2;
     }
 
+    public EventService(EventRepository eventRepo2, PlaceRepository placeRepo) {
+        this.eventRepo = eventRepo2;
+        this.placeRepo = placeRepo;
+    }
+
     public EventDTO createEvent(EventCreateDTO eventIn) {
 
         if (eventIn.getStartDate().isAfter(eventIn.getEndDate())) {

@@ -18,21 +18,24 @@ import com.engSoft.ac2.application.dtos.PlaceDTO;
 import com.engSoft.ac2.domain.model.Place;
 import com.engSoft.ac2.domain.repositories.PlaceRepository;
 
-
 @Service
 public class PlaceService {
 
     @Autowired
     PlaceRepository repo;
 
+    public PlaceService(PlaceRepository repo) {
+        this.repo = repo;
+    }
+
     public Page<PlaceDTO> getPlaces(PageRequest pageRequest) {
-        
+
         Page<Place> pages = repo.findAll(pageRequest);
 
         List<PlaceDTO> placeDtos = pages.stream()
-            .map(place -> new PlaceDTO(place))
-            .collect(Collectors.toList());
-    
+                .map(place -> new PlaceDTO(place))
+                .collect(Collectors.toList());
+
         Page<PlaceDTO> placeDTOPage = new PageImpl<>(placeDtos, pageRequest, pages.getTotalElements());
 
         return placeDTOPage;
@@ -45,35 +48,36 @@ public class PlaceService {
 
     public PlaceDTO updatePlace(PlaceCreationDTO placeIn, long id) {
 
-        try{
+        try {
             Place place = repo.findById(id).get();
             place.setName(placeIn.getName());
             place.setAddress(placeIn.getAddress());
 
             repo.save(place);
-            
+
             return new PlaceDTO(place);
-        }catch(NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
     }
 
     public void deletePlace(long id) {
-        try{
+        try {
             repo.deleteById(id);
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
     }
 
     public PlaceDTO getPlaceById(long id) {
-        try{
+        try {
             Place place = repo.findById(id).get();
-            
+
             return new PlaceDTO(place);
-        }catch(NoSuchElementException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade Place nao foi encontrada.");
-        } 
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "ERRO DE ENTIDADE: A entidade Place nao foi encontrada.");
+        }
     }
 
 }

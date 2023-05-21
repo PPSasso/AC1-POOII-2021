@@ -1,15 +1,22 @@
 package com.engSoft.ac2.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -19,15 +26,23 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.engSoft.ac2.application.dtos.EventCreateDTO;
 import com.engSoft.ac2.application.dtos.EventDTO;
+import com.engSoft.ac2.application.dtos.PlaceCreationDTO;
 import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.model.Event;
+import com.engSoft.ac2.domain.model.Place;
 import com.engSoft.ac2.domain.repositories.AdminRepository;
 import com.engSoft.ac2.domain.repositories.EventRepository;
+import com.engSoft.ac2.domain.repositories.PlaceRepository;
 import com.engSoft.ac2.domain.services.EventService;
+import com.engSoft.ac2.domain.services.PlaceService;
 
 public class EventServiceTest {
 
+    @InjectMocks
     private EventService eventService;
+
+    @Mock
+    private PlaceService placeService;
 
     @Mock
     private EventRepository eventRepo;
@@ -35,13 +50,20 @@ public class EventServiceTest {
     @Mock
     private AdminRepository adminRepo;
 
+    @Mock
+    private PlaceRepository placeRepo;
+
     Event event;
+
+    Place place;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        eventService = new EventService(eventRepo);
+        eventService = new EventService(eventRepo, placeRepo);
+        placeService = new PlaceService(placeRepo);
         ReflectionTestUtils.setField(eventService, "adminRepo", adminRepo);
+        ReflectionTestUtils.setField(eventService, "placeService", placeService);
 
         EventCreateDTO eventCreation = new EventCreateDTO();
 
@@ -56,6 +78,13 @@ public class EventServiceTest {
         Admin admin = new Admin(1, "Thiago", "thi.sanches@hotmail.com", "15997445566");
 
         this.event = new Event(eventCreation, admin);
+
+        PlaceCreationDTO placeCreation = new PlaceCreationDTO();
+        placeCreation.setName("Casa do Sasso");
+        placeCreation.setAddress("Rua um numero dois");
+        placeCreation.setIdEvent(1L);
+
+        this.place = new Place(placeCreation);
 
     }
 
@@ -112,6 +141,57 @@ public class EventServiceTest {
 
         EventDTO returnedEvent = this.eventService.getEventById(1);
         assertEquals(new EventDTO(event), returnedEvent);
+    }
+
+    @Test
+    void deveAssociarEventoAUmPlace() {
+
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+        when(eventRepo.findAll()).thenReturn(eventList);
+        when(eventRepo.findById(any(Long.class))).thenReturn(Optional.of(event));
+
+        when(placeRepo.findById(any(Long.class))).thenReturn(Optional.of(place));
+        place.addEvent(event);
+        when(placeRepo.save(any(Place.class))).thenReturn(place);
+
+        // Act
+        Event result = eventService.associatePlaceToEvent(event.getId(), place.getId());
+
+        // Assert
+        // Verify that the place is associated with the event
+        Assertions.assertTrue(result.getPlaces().contains(place));
+        // Verify that the event is associated with the place
+        Assertions.assertTrue(place.getEvents().contains(result));
+    }
+
+    @Test
+    void deveVerificarErroDeAssociacaoDePlaceComEventoComDatasConflitantes() {
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+
+        // Criar um evento existente com o mesmo horário e data
+        Event existingEvent = new Event();
+        existingEvent.setStartDate(event.getStartDate());
+        existingEvent.setEndDate(event.getEndDate());
+        existingEvent.setStartTime(event.getStartTime());
+        existingEvent.setEndTime(event.getEndTime());
+        existingEvent.addPlaces(place);
+        eventList.add(existingEvent);
+
+        when(eventRepo.findAll()).thenReturn(eventList);
+        when(eventRepo.findById(anyLong())).thenReturn(Optional.of(event));
+        when(placeRepo.findById(anyLong())).thenReturn(Optional.of(place));
+
+        Executable executable = () -> eventService.associatePlaceToEvent(event.getId(), place.getId());
+        assertThrows(ResponseStatusException.class, executable);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, executable);
+
+        // Verificar a mensagem de erro
+        String errorMessage = exception.getMessage();
+        Assertions.assertEquals("400 BAD_REQUEST \"ERRO DE LOCAL: O local ja possui um evento neste horario e data.\"",
+                errorMessage);
     }
 
 }
