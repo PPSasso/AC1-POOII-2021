@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-public class EventIntegrationTest {
+public class EventControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
