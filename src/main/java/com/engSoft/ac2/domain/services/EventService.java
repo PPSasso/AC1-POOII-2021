@@ -99,9 +99,9 @@ public class EventService {
         Page<Event> pages = eventRepo.find(pageRequest, name, date, description);
 
         List<EventDTO> eventDtos = pages.stream()
-            .map(event -> new EventDTO(event))
-            .collect(Collectors.toList());
-    
+                .map(event -> new EventDTO(event))
+                .collect(Collectors.toList());
+
         Page<EventDTO> eventDTOPage = new PageImpl<>(eventDtos, pageRequest, pages.getTotalElements());
 
         return eventDTOPage;
@@ -110,6 +110,7 @@ public class EventService {
     public EventDTO updateEvent(EventUpdateDTO eventIn, long id) {
         try {
             Event event = eventRepo.findById(id).get();
+            ;
             event.setDescription(eventIn.getDescription());
             event.setEmailContact(eventIn.getEmailContact());
             event.setStartDate(eventIn.getStartDate());
@@ -117,6 +118,7 @@ public class EventService {
             event.setStartTime(eventIn.getStartTime());
             event.setEndTime(eventIn.getEndTime());
             event.setTicketPrice(eventIn.getTicketPrice());
+
             try {
                 event.setAdmin(adminRepo.findById(eventIn.getAdminId()).get());
             } catch (NoSuchElementException e) {
