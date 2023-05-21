@@ -20,6 +20,7 @@ import com.engSoft.ac2.application.dtos.EventUpdateDTO;
 import com.engSoft.ac2.application.dtos.SuperDTO;
 import com.engSoft.ac2.application.dtos.TicketDTO;
 import com.engSoft.ac2.application.dtos.TicketListDTO;
+import com.engSoft.ac2.application.factory.TicketFactory;
 import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.model.Attend;
 import com.engSoft.ac2.domain.model.Event;
@@ -308,7 +309,7 @@ public class EventService {
 
         tDto.setDate(Instant.now());
 
-        Ticket ticket = new Ticket(tDto, attend, event);
+        Ticket ticket = TicketFactory.createTicket(tDto, attend, event);
 
         event.addTickets(ticket);
         attend.addTickets(ticket);

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.engSoft.ac2.application.dtos.AdminCreateDTO;
+import com.engSoft.ac2.application.dtos.AdminDTO;
 import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.services.AdminService;
 
@@ -56,9 +58,9 @@ public class AdminsController {
 
 
     @PostMapping
-    public ResponseEntity<Admin> createEvent(@Validated @RequestBody Admin AdminIn)
+    public ResponseEntity<AdminDTO> createEvent(@Validated @RequestBody AdminCreateDTO adminDto)
     {
-        Admin newAdmin = service.createAdmin(AdminIn);
+        AdminDTO newAdmin = service.createAdmin(adminDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAdmin.getId()).toUri();
         return ResponseEntity.created(uri).body(newAdmin);
     }

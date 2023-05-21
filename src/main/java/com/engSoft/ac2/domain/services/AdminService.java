@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.engSoft.ac2.application.dtos.AdminCreateDTO;
+import com.engSoft.ac2.application.dtos.AdminDTO;
+import com.engSoft.ac2.application.factory.UserFactory;
 import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.repositories.AdminRepository;
 
@@ -27,14 +30,18 @@ public class AdminService {
         return pages;
     }
 
-    public Admin createAdmin(Admin adminIn) {
+    public AdminDTO createAdmin(AdminCreateDTO adminDto) {
         for(Admin a : repo.findAll()){
-            if(a.getEmail().equalsIgnoreCase(adminIn.getEmail())){
+            if(a.getEmail().equalsIgnoreCase(adminDto.getEmail())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE ENTIDADE: O email informado ja está sendo utilizado.");
             }
         }
 
-        return repo.save(adminIn);
+        Admin newAdmin = (Admin)UserFactory.createUser("admin", adminDto.getName(),adminDto.getEmail(),adminDto.getPhoneNumber());
+        
+         repo.save(newAdmin);
+
+         return new AdminDTO(newAdmin);
     }
 
     public Admin updateAdmin(Admin adminIn, long id) {
