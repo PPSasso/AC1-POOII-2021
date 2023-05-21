@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.engSoft.ac2.application.dtos.AttendCreateDTO;
+import com.engSoft.ac2.application.dtos.AttendDTO;
 import com.engSoft.ac2.domain.model.Attend;
 import com.engSoft.ac2.domain.services.AttendService;
 
@@ -29,7 +31,7 @@ public class AttendController {
     AttendService service;
 
     @GetMapping
-    public ResponseEntity<Page<Attend>> getAttends(
+    public ResponseEntity<Page<AttendDTO>> getAttends(
 
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "6") Integer linesPerPage,
@@ -40,32 +42,32 @@ public class AttendController {
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Attend> attends = service.getAttends(pageRequest);
+        Page<AttendDTO> attends = service.getAttends(pageRequest);
 
         return ResponseEntity.ok(attends);
 
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Attend> getAttendById(@PathVariable long id)
+    public ResponseEntity<AttendDTO> getAttendById(@PathVariable long id)
     {
-        Attend attend = service.getAttendById(id);
+        AttendDTO attend = service.getAttendById(id);
 
         return ResponseEntity.ok().body(attend);
     }
 
     @PostMapping
-    public ResponseEntity<Attend> createEvent(@RequestBody Attend attendIn)
+    public ResponseEntity<AttendDTO> createEvent(@RequestBody AttendCreateDTO attendIn)
     {
-        Attend newAttend = service.createAttend(attendIn);
+        AttendDTO newAttend = service.createAttend(attendIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAttend.getId()).toUri();
         return ResponseEntity.created(uri).body(newAttend);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Attend> updateEvent(@RequestBody Attend eventIn, @PathVariable long id)
+    public ResponseEntity<AttendDTO> updateEvent(@RequestBody Attend eventIn, @PathVariable long id)
     {
-        Attend event = service.updateAttend(eventIn, id);
+        AttendDTO event = service.updateAttend(eventIn, id);
         return ResponseEntity.ok().body(event);
     }
 

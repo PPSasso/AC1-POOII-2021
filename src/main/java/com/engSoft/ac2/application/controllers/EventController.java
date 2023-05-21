@@ -4,11 +4,11 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.engSoft.ac2.application.dtos.EventAuxDTO;
 import com.engSoft.ac2.application.dtos.EventCreateDTO;
+import com.engSoft.ac2.application.dtos.EventDTO;
 import com.engSoft.ac2.application.dtos.EventUpdateDTO;
 import com.engSoft.ac2.application.dtos.SuperDTO;
 import com.engSoft.ac2.application.dtos.TicketDTO;
@@ -37,17 +38,17 @@ public class EventController {
     EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventCreateDTO> createEvent(@Valid @RequestBody EventCreateDTO eventIn)
+    public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventCreateDTO eventIn)
     {
-        EventCreateDTO newEvent = eventService.createEvent(eventIn);
+        EventDTO newEvent = eventService.createEvent(eventIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newEvent.getId()).toUri();
         return ResponseEntity.created(uri).body(newEvent);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Event> updateEvent(@RequestBody EventUpdateDTO eventIn, @PathVariable long id)
+    public ResponseEntity<EventDTO> updateEvent(@RequestBody EventUpdateDTO eventIn, @PathVariable long id)
     {
-        Event event = eventService.updateEvent(eventIn, id);
+        EventDTO event = eventService.updateEvent(eventIn, id);
         return ResponseEntity.ok().body(event);
     }
 
@@ -59,15 +60,15 @@ public class EventController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Event> getEventById(@PathVariable long id)
+    public ResponseEntity<EventDTO> getEventById(@PathVariable long id)
     {
-        Event event = eventService.getEventById(id);
+        EventDTO event = eventService.getEventById(id);
 
         return ResponseEntity.ok().body(event);
     }
     
     @GetMapping
-    public ResponseEntity<Page<Event>> getEvents(
+    public ResponseEntity<Page<EventDTO>> getEvents(
 
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "6") Integer linesPerPage,
@@ -81,7 +82,7 @@ public class EventController {
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Event> events = eventService.getEvents(pageRequest, name, startDate, description);
+        Page<EventDTO> events = eventService.getEvents(pageRequest, name, startDate, description);
 
         return ResponseEntity.ok(events);
 
@@ -121,7 +122,6 @@ public class EventController {
 
 
     @GetMapping("/{idEvent}/tickets")
-
     public ResponseEntity<SuperDTO> getEventTickets(@PathVariable Long idEvent){
         
         SuperDTO superDTO = eventService.getEventTickets(idEvent);

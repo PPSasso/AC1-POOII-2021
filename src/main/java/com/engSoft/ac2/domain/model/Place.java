@@ -12,6 +12,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.engSoft.ac2.application.dtos.PlaceCreationDTO;
+import com.engSoft.ac2.application.dtos.PlaceDTO;
+
 @Entity
 @Table(name="TB_PLACE")
 public class Place implements Serializable{
@@ -27,6 +30,10 @@ public class Place implements Serializable{
     @ManyToMany
     private List<Event> events = new ArrayList<>();
 
+    public Place(PlaceCreationDTO placeCreationDTO){
+        this.name = placeCreationDTO.getName();
+        this.address = placeCreationDTO.getAddress();
+    }
     public Place(){
 
     }
@@ -34,6 +41,12 @@ public class Place implements Serializable{
         this.id = id;
         this.name = name;
         this.address = address;
+    }
+
+    public Place(PlaceDTO placeDTO) {
+        this.id = placeDTO.getId();
+        this.name = placeDTO.getName();
+        this.address = placeDTO.getAddress();
     }
 
     

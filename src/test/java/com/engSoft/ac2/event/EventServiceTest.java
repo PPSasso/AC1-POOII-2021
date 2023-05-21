@@ -18,6 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.engSoft.ac2.application.dtos.EventCreateDTO;
+import com.engSoft.ac2.application.dtos.EventDTO;
 import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.model.Event;
 import com.engSoft.ac2.domain.repositories.AdminRepository;
@@ -69,7 +70,6 @@ public class EventServiceTest {
         // Configurando o comportamento simulado do eventRepo
         Mockito.when(adminRepo.findById(any())).thenReturn(optAdmin);
 
-        Event event = new Event();
         event.setAdmin(admin);
 
         EventCreateDTO eventCreation = new EventCreateDTO();
@@ -83,10 +83,11 @@ public class EventServiceTest {
         eventCreation.setEmailContact("teste@hotmail.com");
 
         // Execução
-        EventCreateDTO eventCreated = eventService.createEvent(eventCreation);
+        EventDTO eventCreated = eventService.createEvent(eventCreation);
 
         // Verificação
-        Assertions.assertEquals(eventCreation, eventCreated);
+        Assertions.assertEquals(event.getName(), eventCreated.getName());
+        Assertions.assertEquals(event.getDescription(), eventCreated.getDescription());
     }
 
     @Test
@@ -109,8 +110,8 @@ public class EventServiceTest {
 
         Mockito.when(eventRepo.findById(1L)).thenReturn(Optional.of(this.event));
 
-        Event returnedEvent = this.eventService.getEventById(1);
-        assertEquals(event, returnedEvent);
+        EventDTO returnedEvent = this.eventService.getEventById(1);
+        assertEquals(new EventDTO(event), returnedEvent);
     }
 
 }

@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.engSoft.ac2.domain.model.Place;
+import com.engSoft.ac2.application.dtos.PlaceCreationDTO;
+import com.engSoft.ac2.application.dtos.PlaceDTO;
 import com.engSoft.ac2.domain.services.PlaceService;
 
 @RestController
@@ -30,7 +31,7 @@ public class PlaceController {
     PlaceService service;
 
     @GetMapping
-    public ResponseEntity<Page<Place>> getPaces(
+    public ResponseEntity<Page<PlaceDTO>> getPaces(
 
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "6") Integer linesPerPage,
@@ -41,32 +42,32 @@ public class PlaceController {
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Place> places = service.getPlaces(pageRequest);
+        Page<PlaceDTO> places = service.getPlaces(pageRequest);
 
         return ResponseEntity.ok(places);
 
     }
     
     @GetMapping("{id}")
-    public ResponseEntity<Place> getPlaceById(@PathVariable long id)
+    public ResponseEntity<PlaceDTO> getPlaceById(@PathVariable long id)
     {
-        Place place = service.getPlaceById(id);
+        PlaceDTO place = service.getPlaceById(id);
 
         return ResponseEntity.ok().body(place);
     }
 
     @PostMapping
-    public ResponseEntity<Place> createEvent(@Validated @RequestBody Place PlaceIn)
+    public ResponseEntity<PlaceDTO> createPlace(@Validated @RequestBody PlaceCreationDTO PlaceIn)
     {
-        Place newPlace = service.createPlace(PlaceIn);
+        PlaceDTO newPlace = service.createPlace(PlaceIn);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPlace.getId()).toUri();
         return ResponseEntity.created(uri).body(newPlace);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Place> updateEvent(@RequestBody Place eventIn, @PathVariable long id)
+    public ResponseEntity<PlaceDTO> updateEvent(@RequestBody PlaceCreationDTO eventIn, @PathVariable long id)
     {
-        Place event = service.updatePlace(eventIn, id);
+        PlaceDTO event = service.updatePlace(eventIn, id);
         return ResponseEntity.ok().body(event);
     }
 

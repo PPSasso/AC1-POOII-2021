@@ -1,15 +1,21 @@
 package com.engSoft.ac2.domain.services;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.engSoft.ac2.application.dtos.AttendCreateDTO;
+import com.engSoft.ac2.application.dtos.AttendDTO;
+import com.engSoft.ac2.application.factory.UserFactory;
 import com.engSoft.ac2.domain.model.Attend;
 import com.engSoft.ac2.domain.repositories.AttendRepository;
 
@@ -20,27 +26,34 @@ public class AttendService {
     @Autowired
     AttendRepository repo;
 
-    public Page<Attend> getAttends(PageRequest pageRequest) {
+    public Page<AttendDTO> getAttends(PageRequest pageRequest) {
         
         Page<Attend> pages = repo.findAll(pageRequest);
 
-        return pages;
+    List<AttendDTO> attendDTOs = pages.stream()
+        .map(attend -> new AttendDTO(attend))
+        .collect(Collectors.toList());
+
+    Page<AttendDTO> adminDTOPage = new PageImpl<>(attendDTOs, pageRequest, pages.getTotalElements());
+
+    return adminDTOPage;
     }
 
-    public Attend createAttend(Attend attendIn) {
+    public AttendDTO createAttend(AttendCreateDTO attendDto) {
 
         for(Attend a : repo.findAll()){
-            if(a.getEmail().equalsIgnoreCase(attendIn.getEmail())){
+            if(a.getEmail().equalsIgnoreCase(attendDto.getEmail())){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO DE ENTIDADE: O email informado ja está sendo utilizado.");
             }
         }
 
-        attendIn.setBalance(0.0);
+        Attend  newAttend = (Attend)UserFactory.createUser("attendee", attendDto.getName(),attendDto.getEmail(),null);
+        repo.save(newAttend);
 
-        return repo.save(attendIn);
+        return new AttendDTO(newAttend);
     }
 
-    public Attend updateAttend(Attend attendIn, long id) {
+    public AttendDTO updateAttend(Attend attendIn, long id) {
 
         try{
             Attend attend = repo.findById(id).get();
@@ -49,7 +62,7 @@ public class AttendService {
 
             repo.save(attend);
             
-            return attend;
+            return new AttendDTO(attend);
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
@@ -63,11 +76,11 @@ public class AttendService {
         }
     }
 
-    public Attend getAttendById(long id) {
+    public AttendDTO getAttendById(long id) {
         try{
             Attend attend = repo.findById(id).get();
             
-            return attend;
+            return new AttendDTO(attend);
         }catch(NoSuchElementException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         } 

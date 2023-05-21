@@ -5,10 +5,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.engSoft.ac2.application.dtos.AdminDTO;
 import com.engSoft.ac2.application.dtos.EventCreateDTO;
+import com.engSoft.ac2.application.dtos.EventDTO;
 import com.engSoft.ac2.application.dtos.EventUpdateDTO;
 import com.engSoft.ac2.application.dtos.SuperDTO;
 import com.engSoft.ac2.application.dtos.TicketDTO;
@@ -58,7 +61,7 @@ public class EventService {
         this.eventRepo = eventRepo2;
     }
 
-    public EventCreateDTO createEvent(EventCreateDTO eventIn) {
+    public EventDTO createEvent(EventCreateDTO eventIn) {
 
         if (eventIn.getStartDate().isAfter(eventIn.getEndDate())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -80,7 +83,7 @@ public class EventService {
                 eventIn.setAdmin(new AdminDTO(admin));
                 eventIn.setId(event.getId());
 
-                return eventIn;
+                return new EventDTO(event);
 
             } catch (NoSuchElementException e) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -91,14 +94,20 @@ public class EventService {
 
     }
 
-    public Page<Event> getEvents(Pageable pageRequest, String name, String startDate, String description) {
+    public Page<EventDTO> getEvents(Pageable pageRequest, String name, String startDate, String description) {
         LocalDate date = LocalDate.parse(startDate);
         Page<Event> pages = eventRepo.find(pageRequest, name, date, description);
 
-        return pages;
+        List<EventDTO> eventDtos = pages.stream()
+            .map(event -> new EventDTO(event))
+            .collect(Collectors.toList());
+    
+        Page<EventDTO> eventDTOPage = new PageImpl<>(eventDtos, pageRequest, pages.getTotalElements());
+
+        return eventDTOPage;
     }
 
-    public Event updateEvent(EventUpdateDTO eventIn, long id) {
+    public EventDTO updateEvent(EventUpdateDTO eventIn, long id) {
         try {
             Event event = eventRepo.findById(id).get();
             event.setDescription(eventIn.getDescription());
@@ -125,7 +134,7 @@ public class EventService {
                 eventRepo.save(event);
             }
 
-            return event;
+            return new EventDTO(event);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ERRO DE ENTIDADE: A entidade nao foi encontrada.");
         }
@@ -140,11 +149,11 @@ public class EventService {
         }
     }
 
-    public Event getEventById(long id) {
+    public EventDTO getEventById(long id) {
         try {
             Event event = eventRepo.findById(id).get();
 
-            return event;
+            return new EventDTO(event);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "ERRO DE ENTIDADE: A entidade Event nao foi encontrada.");
@@ -153,8 +162,8 @@ public class EventService {
 
     public Event associatePlaceToEvent(Long idEvent, Long idPlace) {
 
-        Event event = getEventById(idEvent);
-        Place place = placeService.getPlaceById(idPlace);
+        Event event = eventRepo.findById(idEvent).get();
+        Place place = new Place(placeService.getPlaceById(idPlace));
 
         for (Event e : eventRepo.findAll()) {
             if ((event.getStartDate().isEqual(e.getStartDate())) // Se iniciar no mesmo dia.
@@ -218,7 +227,7 @@ public class EventService {
     }
 
     public void deletePlaceFromEvent(Long idEvent, Long idPlace) {
-        Event event = getEventById(idEvent);
+        Event event = eventRepo.findById(idEvent).get();
 
         placeService.getPlaceById(idPlace);
 

@@ -21,7 +21,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.engSoft.ac2.application.dtos.AdminCreateDTO;
 import com.engSoft.ac2.application.dtos.AdminDTO;
-import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.services.AdminService;
 
 @RestController
@@ -32,7 +31,7 @@ public class AdminsController {
     AdminService service;
 
     @GetMapping
-    public ResponseEntity<Page<Admin>> getAdmins(
+    public ResponseEntity<Page<AdminDTO>> getAdmins(
 
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "6") Integer linesPerPage,
@@ -42,16 +41,16 @@ public class AdminsController {
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 
-        Page<Admin> admins = service.getAdmins(pageRequest);
+        Page<AdminDTO> admins = service.getAdmins(pageRequest);
 
         return ResponseEntity.ok(admins);
 
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Admin> getAdminById(@PathVariable long id)
+    public ResponseEntity<AdminDTO> getAdminById(@PathVariable long id)
     {
-        Admin admin = service.getAdminById(id);
+        AdminDTO admin = service.getAdminById(id);
 
         return ResponseEntity.ok().body(admin);
     }
@@ -66,9 +65,9 @@ public class AdminsController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Admin> updateEvent(@Validated @RequestBody Admin eventIn, @PathVariable long id)
+    public ResponseEntity<AdminDTO> updateEvent(@Validated @RequestBody AdminCreateDTO eventIn, @PathVariable long id)
     {
-        Admin event = service.updateAdmin(eventIn, id);
+        AdminDTO event = service.updateAdmin(eventIn, id);
         return ResponseEntity.ok().body(event);
     }
 
