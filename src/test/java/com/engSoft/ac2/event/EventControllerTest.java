@@ -30,6 +30,7 @@ import com.engSoft.ac2.domain.model.Admin;
 import com.engSoft.ac2.domain.model.Event;
 import com.engSoft.ac2.domain.repositories.AdminRepository;
 import com.engSoft.ac2.domain.repositories.EventRepository;
+import com.engSoft.ac2.domain.repositories.PlaceRepository;
 import com.engSoft.ac2.domain.services.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,6 +53,9 @@ public class EventControllerTest {
   @Mock
   private AdminRepository adminRepo;
 
+  @Mock
+  private PlaceRepository placeRepo;
+
   @LocalServerPort
   private int port;
 
@@ -68,7 +72,7 @@ public class EventControllerTest {
   @BeforeEach
   void setup() {
     MockitoAnnotations.openMocks(this);
-    eventService = new EventService(eventRepo);
+    eventService = new EventService(eventRepo, placeRepo);
     ReflectionTestUtils.setField(eventService, "adminRepo", adminRepo);
 
     eventCreation.setName("Abril Fest");

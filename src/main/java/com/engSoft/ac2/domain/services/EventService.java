@@ -57,10 +57,6 @@ public class EventService {
     @Autowired
     PlaceService placeService;
 
-    public EventService(EventRepository eventRepo2) {
-        this.eventRepo = eventRepo2;
-    }
-
     public EventService(EventRepository eventRepo2, PlaceRepository placeRepo) {
         this.eventRepo = eventRepo2;
         this.placeRepo = placeRepo;
