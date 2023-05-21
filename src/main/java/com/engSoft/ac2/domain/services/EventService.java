@@ -164,69 +164,58 @@ public class EventService {
     }
 
     public Event associatePlaceToEvent(Long idEvent, Long idPlace) {
-
-        Event event = eventRepo.findById(idEvent).get();
+        Event event = eventRepo.findById(idEvent)
+                .orElseThrow(() -> new IllegalArgumentException("Evento não encontrado com o ID: " + idEvent));
         Place place = new Place(placeService.getPlaceById(idPlace));
 
-        for (Event e : eventRepo.findAll()) {
-            if ((event.getStartDate().isEqual(e.getStartDate())) // Se iniciar no mesmo dia.
-                    || (event.getStartDate().isEqual(e.getEndDate())) // Se iniciar no mesmo dia que o outro acaba.
-                    || (event.getEndDate().isEqual(e.getStartDate())) // Se acabar no mesmo dia que o outro inicia.
-                    || (event.getEndDate().isEqual(e.getEndDate())) // Se acabar no mesmo dia.
-            ) {
-                if (((event.getStartTime().compareTo(e.getStartTime()) > 0)
-                        && (event.getStartTime().compareTo(e.getEndTime()) < 0)) // Se iniciar no intervalo de outro
-                                                                                 // evento.
-                        || ((event.getEndTime().compareTo(e.getStartTime()) > 0)
-                                && (event.getEndTime().compareTo(e.getEndTime()) < 0)) // Se acabar no intervalo de
-                                                                                       // outro evento.
-                        || (event.getStartTime().compareTo(e.getStartTime()) == 0) // Se iniciar no mesmo horario
-                        || (event.getStartTime().compareTo(e.getEndTime()) == 0) // Se iniciar no horario de termino de
-                                                                                 // outro evento
-                        || (event.getEndTime().compareTo(e.getStartTime()) == 0) // Se acabar no horario de inicio de
-                                                                                 // outro evento
-                        || (event.getEndTime().compareTo(e.getEndTime()) == 0) // Se acabar no mesmo horario
-                        || ((event.getStartTime().compareTo(e.getStartTime()) < 0)
-                                && (event.getEndTime().compareTo(e.getEndTime()) > 0)) // Se iniciar antes e acabar
-                                                                                       // depois de um evento.
-                ) {
-                    for (Place p : e.getPlaces()) {
-                        if (p.equals(place)) {
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                    "ERRO DE LOCAL: O local ja possui um evento neste horario e data.");
-                        }
-                    }
-                }
-            } else if (((event.getStartDate().isAfter(e.getStartDate()))
-                    && (event.getStartDate().isBefore(e.getEndDate()))) // Se iniciar no intervalo de outro evento.
-                    || ((event.getEndDate().isAfter(e.getStartDate())) && (event.getEndDate().isBefore(e.getEndDate()))) // Se
-                                                                                                                         // acabar
-                                                                                                                         // no
-                                                                                                                         // intervalo
-                                                                                                                         // de
-                                                                                                                         // outro
-                                                                                                                         // evento.
-                    || ((event.getStartDate().isBefore(e.getStartDate()))
-                            && (event.getEndDate().isAfter(e.getEndDate()))) // Se iniciar antes e acabar depois de um
-                                                                             // evento.
-            ) {
-                for (Place p : e.getPlaces()) {
-                    if (p.equals(place)) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "ERRO DE LOCAL: O local ja possui um evento neste horario e data.");
-                    }
-                }
-            }
-        }
+        validaEventPlaceConflito(event, place);
 
         event.addPlaces(place);
-
         place.addEvent(event);
 
         eventRepo.save(event);
         placeRepo.save(place);
 
         return event;
+    }
+
+    private void validaEventPlaceConflito(Event event, Place place) {
+        for (Event e : eventRepo.findAll()) {
+            if (eventDatesIncompativel(event, e) && eventTimesIncompativel(event, e)) {
+                for (Place p : e.getPlaces()) {
+                    if (p.equals(place)) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "ERRO DE LOCAL: O local já possui um evento neste horário e data.");
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean eventDatesIncompativel(Event event1, Event event2) {
+        return event1.getStartDate().isEqual(event2.getStartDate())
+                || event1.getStartDate().isEqual(event2.getEndDate())
+                || event1.getEndDate().isEqual(event2.getStartDate())
+                || event1.getEndDate().isEqual(event2.getEndDate())
+                || (event1.getStartDate().isBefore(event2.getStartDate())
+                        && event1.getEndDate().isAfter(event2.getStartDate()))
+                || (event1.getStartDate().isAfter(event2.getStartDate())
+                        && event1.getStartDate().isBefore(event2.getEndDate()))
+                || (event1.getStartDate().isBefore(event2.getEndDate())
+                        && event1.getEndDate().isAfter(event2.getEndDate()))
+                || (event1.getStartDate().isBefore(event2.getStartDate())
+                        && event1.getEndDate().isAfter(event2.getEndDate()));
+    }
+
+    public boolean eventTimesIncompativel(Event event1, Event event2) {
+        return event1.getStartTime().compareTo(event2.getStartTime()) == 0
+                || event1.getStartTime().compareTo(event2.getEndTime()) == 0
+                || event1.getEndTime().compareTo(event2.getStartTime()) == 0
+                || event1.getEndTime().compareTo(event2.getEndTime()) == 0
+                || (event1.getStartTime().compareTo(event2.getStartTime()) > 0
+                        && event1.getStartTime().compareTo(event2.getEndTime()) < 0)
+                || (event1.getEndTime().compareTo(event2.getStartTime()) > 0
+                        && event1.getEndTime().compareTo(event2.getEndTime()) < 0);
     }
 
     public void deletePlaceFromEvent(Long idEvent, Long idPlace) {

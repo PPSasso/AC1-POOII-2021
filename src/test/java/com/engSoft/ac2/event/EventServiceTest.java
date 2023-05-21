@@ -190,8 +190,152 @@ public class EventServiceTest {
 
         // Verificar a mensagem de erro
         String errorMessage = exception.getMessage();
-        Assertions.assertEquals("400 BAD_REQUEST \"ERRO DE LOCAL: O local ja possui um evento neste horario e data.\"",
+        Assertions.assertEquals("400 BAD_REQUEST \"ERRO DE LOCAL: O local já possui um evento neste horário e data.\"",
                 errorMessage);
     }
 
+    @Test
+    void deveRetornarTrueQuandoEventStartTimeSaoIguais() {
+        Event event1 = new Event();
+        event1.setStartTime(LocalTime.of(10, 0));
+
+        Event event2 = new Event();
+        event2.setStartTime(LocalTime.of(10, 0));
+
+        boolean result = eventService.eventTimesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoEventEndTimeSaoIguais() {
+        Event event1 = new Event();
+        event1.setStartTime(LocalTime.of(10, 0));
+        event1.setEndTime(LocalTime.of(12, 0));
+
+        Event event2 = new Event();
+        event2.setStartTime(LocalTime.of(10, 0));
+        event2.setEndTime(LocalTime.of(12, 0));
+
+        boolean result = eventService.eventTimesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoUmEventoComecaAntesDeOutroTerminar() {
+        Event event1 = new Event();
+        event1.setStartTime(LocalTime.of(10, 0));
+        event1.setEndTime(LocalTime.of(12, 0));
+
+        Event event2 = new Event();
+        event2.setStartTime(LocalTime.of(11, 0));
+        event2.setEndTime(LocalTime.of(13, 0));
+
+        boolean result = eventService.eventTimesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoUmEventoComecaAntesDeOutroTerminarInverso() {
+        Event event1 = new Event();
+        event1.setStartTime(LocalTime.of(10, 0));
+        event1.setEndTime(LocalTime.of(12, 0));
+
+        Event event2 = new Event();
+        event2.setStartTime(LocalTime.of(9, 0));
+        event2.setEndTime(LocalTime.of(11, 0));
+
+        boolean result = eventService.eventTimesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void DeveRetornarFalseQuandoEventosSaoCompativeis() {
+        Event event1 = new Event();
+        event1.setStartTime(LocalTime.of(10, 0));
+        event1.setEndTime(LocalTime.of(12, 0));
+
+        Event event2 = new Event();
+        event2.setStartTime(LocalTime.of(13, 0));
+        event2.setEndTime(LocalTime.of(14, 0));
+
+        boolean result = eventService.eventTimesIncompativel(event1, event2);
+
+        Assertions.assertFalse(result);
+    }
+
+    @Test
+    void deveRetornarTrueEmEventosDeMesmaDataDeInicio() {
+        Event event1 = new Event();
+        event1.setStartDate(LocalDate.of(2023, 5, 21));
+
+        Event event2 = new Event();
+        event2.setStartDate(LocalDate.of(2023, 5, 21));
+
+        boolean result = eventService.eventDatesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoADataDosEventosForemAsMesmas() {
+        Event event1 = new Event();
+        event1.setStartDate(LocalDate.of(2023, 5, 21));
+        event1.setEndDate(LocalDate.of(2023, 5, 23));
+
+        Event event2 = new Event();
+        event2.setStartDate(LocalDate.of(2023, 5, 21));
+        event2.setEndDate(LocalDate.of(2023, 5, 23));
+
+        boolean result = eventService.eventDatesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void deveRetornarTrueQuandoADataDeFimDosEventosForAMesma() {
+        Event event1 = new Event();
+        event1.setStartDate(LocalDate.of(2023, 5, 21));
+        event1.setEndDate(LocalDate.of(2023, 5, 23));
+
+        Event event2 = new Event();
+        event2.setStartDate(LocalDate.of(2023, 5, 20));
+        event2.setEndDate(LocalDate.of(2023, 5, 23));
+
+        boolean result = eventService.eventDatesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    void DeveRetornarTrueQuandoDatasDeInicioConflotarem() {
+        Event event1 = new Event();
+        event1.setStartDate(LocalDate.of(2023, 5, 21));
+        event1.setEndDate(LocalDate.of(2023, 5, 23));
+
+        Event event2 = new Event();
+        event2.setStartDate(LocalDate.of(2023, 5, 22));
+        event2.setEndDate(LocalDate.of(2023, 5, 25));
+
+        boolean result = eventService.eventDatesIncompativel(event1, event2);
+
+        Assertions.assertTrue(result);
+    }
+
+    void DeveRetornarFalseQuandoEventosTiveremDatasCompativeis() {
+        Event event1 = new Event();
+        event1.setStartDate(LocalDate.of(2023, 5, 21));
+        event1.setEndDate(LocalDate.of(2023, 5, 23));
+
+        Event event2 = new Event();
+        event2.setStartDate(LocalDate.of(2023, 5, 25));
+        event2.setEndDate(LocalDate.of(2023, 5, 26));
+
+        boolean result = eventService.eventDatesIncompativel(event1, event2);
+
+        Assertions.assertFalse(result);
+    }
 }
