@@ -23,7 +23,7 @@ public class BaseUser implements Serializable{
 
     private String name;
 
-    private String email;
+    private EmailUser email;
 
     public BaseUser() {
     }
@@ -31,7 +31,7 @@ public class BaseUser implements Serializable{
     public BaseUser(long id, String name, String email) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.email = new EmailUser(email);
     }
 
     public long getId() {
@@ -69,10 +69,14 @@ public class BaseUser implements Serializable{
     }
 
     public String getEmail() {
+        return email.getEmailFinal();
+    }
+    
+    public EmailUser getEmailObj() {
         return email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = new EmailUser(email);
     }
 }
