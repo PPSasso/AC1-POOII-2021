@@ -2,6 +2,7 @@ package com.engSoft.ac2.domain.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,16 +14,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_BASE_USER")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class BaseUser implements Serializable{
+public class BaseUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
 
+    @Embedded
     private EmailUser email;
 
     public BaseUser() {
@@ -71,7 +73,7 @@ public class BaseUser implements Serializable{
     public String getEmail() {
         return email.getEmailFinal();
     }
-    
+
     public EmailUser getEmailObj() {
         return email;
     }
