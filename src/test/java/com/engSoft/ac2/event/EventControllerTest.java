@@ -65,10 +65,6 @@ public class EventControllerTest {
 
   EventUpdateDTO eventUpdate = new EventUpdateDTO();
 
-  private String getRootUrl() {
-    return "http://localhost:" + port;
-  }
-
   @BeforeEach
   void setup() {
     MockitoAnnotations.openMocks(this);
