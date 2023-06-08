@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   database:
@@ -10,7 +10,7 @@ services:
       - db-volume:/var/lib/postgresql/data
 
   api:
-    image: sistema/sistema-ac2
+    image: thisanches07/sistema
     environment:
       DB_HOST: database
     ports:
