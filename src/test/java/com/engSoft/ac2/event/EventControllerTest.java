@@ -73,8 +73,8 @@ public class EventControllerTest {
 
     eventCreation.setName("Abril Fest");
     eventCreation.setDescription("descrition");
-    eventCreation.setStartDate(LocalDate.of(2023, 06, 01));
-    eventCreation.setEndDate(LocalDate.of(2023, 06, 02));
+    eventCreation.setStartDate(LocalDate.of(2024, 06, 01));
+    eventCreation.setEndDate(LocalDate.of(2024, 06, 02));
     eventCreation.setStartTime(LocalTime.now());
     eventCreation.setEndTime(LocalTime.now());
     eventCreation.setEmailContact("teste@hotmail.com");
